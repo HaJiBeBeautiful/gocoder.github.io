@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://topcoder520.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/syntax.css' />
+    <title>https自签名证书生成 - HuangJing&#39;s blog</title>
+    
+    <link rel="icon" type="image/x-icon" href='/images/github.png'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    <meta name="description"
+  content="https双向验证 自签名证书生成" />
+<meta name="keywords"
+  content='blog, google analytics' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://topcoder520.github.io/post/https%E8%87%AA%E7%AD%BE%E5%90%8D%E8%AF%81%E4%B9%A6%E7%94%9F%E6%88%90/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="https自签名证书生成 - HuangJing&#39;s blog" />
+<meta name="twitter:description"
+  content="https双向验证 自签名证书生成" />
+<meta name="twitter:site" content="https://topcoder520.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://topcoder520.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="https自签名证书生成 - HuangJing&#39;s blog">
+<meta property="og:description"
+  content="https双向验证 自签名证书生成" />
+<meta property="og:url" content="https://topcoder520.github.io/post/https%E8%87%AA%E7%AD%BE%E5%90%8D%E8%AF%81%E4%B9%A6%E7%94%9F%E6%88%90/" />
+<meta property="og:site_name" content="https自签名证书生成" />
+<meta property="og:image"
+  content="https://topcoder520.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2021-08-02 21:23:41 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://topcoder520.github.io/">
+        <svg class="octicon" height="32" viewBox="0 0 16 16" version="1.1" width="32">
+          <path fill-rule="evenodd"
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+          </path>
+        </svg>
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd"
+            d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          <form target="_blank" action="https://github.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://topcoder520.github.io/">
+            </label>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://topcoder520.github.io/">
+        <svg class="octicon octicon-mark-github v-align-middle" height="32" viewBox="0 0 16 16" version="1.1"
+          width="32">
+          <path fill-rule="evenodd"
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+          </path>
+        </svg>
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+  
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+<div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://topcoder520.github.io/">
+                  <img class=" avatar-user"
+                    src="https://avatars.githubusercontent.com/u/38901719?v=4"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://topcoder520.github.io/">HuangJing</a></span><span
+                    class="path-divider">/</span><strong class="css-truncate-target mr-1" style="max-width: 410px"><a
+                      href="https://topcoder520.github.io/post/https%E8%87%AA%E7%AD%BE%E5%90%8D%E8%AF%81%E4%B9%A6%E7%94%9F%E6%88%90/">https自签名证书生成</a></strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Mon, 02 Aug 2021 21:23:41 &#43;0800"
+                    class="no-wrap">
+                    Mon, 02 Aug 2021 21:23:41 &#43;0800</relative-time>
+
+                  
+                  <span class="file-info-divider"></span>
+                  Modified <relative-time datetime="Mon, 02 Aug 2021 22:08:59 &#43;0800"
+                    class="no-wrap">
+                    Mon, 02 Aug 2021 22:08:59 &#43;0800</relative-time>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" class="btn btn-octicon m-0 mr-2 p-2" aria-haspopup="menu" aria-label="Table of Contents" role="button">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                          1718 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                    
+                    <a class="muted-link mr-3" href="/tags/https">
+                      <svg class="octicon octicon-tag" viewBox="0 0 16 16" version="1.1" width="16" height="16">
+                        <path fill-rule="evenodd"
+                          d="M2.5 7.775V2.75a.25.25 0 01.25-.25h5.025a.25.25 0 01.177.073l6.25 6.25a.25.25 0 010 .354l-5.025 5.025a.25.25 0 01-.354 0l-6.25-6.25a.25.25 0 01-.073-.177zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 010 2.474l-5.026 5.026a1.75 1.75 0 01-2.474 0l-6.25-6.25A1.75 1.75 0 011 7.775zM6 5a1 1 0 100 2 1 1 0 000-2z">
+                        </path>
+                      </svg>
+                      https
+                    </a>
+                    
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5">
+                <article class="markdown-body entry-content container-lg"><h1 id="gohttpscert">gohttpscert</h1>
+<h2 id="https双向验证-自签名证书生成">https双向验证 自签名证书生成</h2>
+<p>首先需要下载 OpenSSL <a href="http://slproweb.com/products/Win32OpenSSL.html">http://slproweb.com/products/Win32OpenSSL.html</a></p>
+<h2 id="第一种方法go115版本以下证书生成">第一种方法：GO1.15版本以下证书生成</h2>
+<p><strong>go 1.15 版本开始废弃 CommonName</strong><br>
+<strong>前提：需要设置环境变量 GODEBUG 为 x509ignoreCN=0</strong></p>
+<h3 id="1建立我们自己的ca">1、建立我们自己的CA</h3>
+<p>需要生成一个CA私钥和一个CA的数字证书:</p>
+<pre><code>openssl genrsa -out ca.key 2048
+openssl req -x509 -new -nodes -key ca.key -subj &quot;/CN=localhost&quot; -days 5000 -out ca.crt
+</code></pre>
+<p>如果报以下错误：</p>
+<pre><code>Subject does not start with '/'.
+problems making Certificate Request
+</code></pre>
+<p>该错误是由Git for Windows中MinGW/MSYS模块的路径转换机制引起的。
+解决方案：将-subj参数中第一个“/”改为“//”，其余“/”改为“\”，如下：</p>
+<pre><code>&quot;//CN=localhost&quot;
+</code></pre>
+<h3 id="2接下来生成server端的私钥生成数字证书请求并用我们的ca私钥签发server的数字证书">2、接下来，生成server端的私钥，生成数字证书请求，并用我们的ca私钥签发server的数字证书</h3>
+<pre><code>openssl genrsa -out server.key 2048
+openssl req -new -key server.key -subj &quot;/CN=localhost&quot; -out server.csr
+openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 5000
+</code></pre>
+<p>现在我们的工作目录下有如下一些私钥和证书文件：
+CA:
+私钥文件 ca.key
+数字证书 ca.crt</p>
+<p>Server:
+私钥文件 server.key
+数字证书 server.crt</p>
+<h3 id="3生成客户端的私钥与证书">3、生成客户端的私钥与证书</h3>
+<pre><code>openssl genrsa -out client.key 2048
+openssl req -new -key client.key -subj &quot;/CN=localhost&quot; -out client.csr
+</code></pre>
+<p>golang的tls需要校验ExtKeyUsage，所以要在生成client.crt时指定extKeyUsage<br>
+创建文件client.ext<br>
+client.ext内容：<br>
+extendedKeyUsage=clientAuth</p>
+<pre><code>openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -extfile client.ext -out client.crt -days 5000
+</code></pre>
+<h2 id="第二种方法go115版本及15版本以上的证书生成">第二种方法：GO1.15版本及1.5版本以上的证书生成</h2>
+<p>因为 go 1.15 版本开始废弃 CommonName，因此推荐使用 SAN 证书。 <br>
+下面就介绍一下SAN证书生成</p>
+<h3 id="第1步生成-ca-根证书">第1步：生成 CA 根证书</h3>
+<pre><code>openssl genrsa -out ca.key 2048
+openssl req -new -x509 -days 3650 -key ca.key -out ca.pem    
+</code></pre>
+<p>填写信息:</p>
+<pre><code>You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:cn
+State or Province Name (full name) [Some-State]:shanghai
+Locality Name (eg, city) []:shanghai
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:custer
+Organizational Unit Name (eg, section) []:custer
+Common Name (e.g. server FQDN or YOUR name) []:localhost
+Email Address []:
+</code></pre>
+<h3 id="第2步用-openssl-生成-ca-和双方-san-证书">第2步：用 openssl 生成 ca 和双方 SAN 证书。</h3>
+<p>准备默认 OpenSSL 配置文件于当前目录 <br>
+linux系统在 : /etc/pki/tls/openssl.cnf <br>
+Mac系统在: /System/Library/OpenSSL/openssl.cnf <br>
+Windows：安装目录下 openssl.cfg 比如 D:\Program Files\OpenSSL-Win64\bin\openssl.cfg</p>
+<p>1：拷贝配置文件到项目 然后修改</p>
+<p>2：找到 [ CA_default ],打开 copy_extensions = copy</p>
+<p>3：找到[ req ],打开 req_extensions = v3_req # The extensions to add to a certificate request</p>
+<p>4：找到[ v3_req ],添加 subjectAltName = @alt_names</p>
+<p>5：添加新的标签 [ alt_names ] , 和标签字段(建议在openssl.cfg文件最末尾添加在标签)</p>
+<pre><code>[ alt_names ]
+DNS.1 = localhost
+DNS.2 = *.custer.fun
+</code></pre>
+<p>这里填入需要加入到 Subject Alternative Names 段落中的域名名称，可以写入多个。</p>
+<h3 id="第3步生成服务端证书">第3步：生成服务端证书</h3>
+<pre><code>openssl genpkey -algorithm RSA -out server.key
+
+openssl req -new -nodes -key server.key -out server.csr -days 3650 -subj &quot;/C=cn/OU=custer/O=custer/CN=localhost&quot; -config ./openssl.cfg -extensions v3_req
+
+openssl x509 -req -days 3650 -in server.csr -out server.pem -CA ca.pem -CAkey ca.key -CAcreateserial -extfile ./openssl.cfg -extensions v3_req
+</code></pre>
+<p>server.csr是上面生成的证书请求文件。ca.pem/ca.key是CA证书文件和key，用来对server.csr进行签名认证。这两个文件在之前生成的。</p>
+<h3 id="第4步生成客户端证书">第4步：生成客户端证书</h3>
+<pre><code>openssl genpkey -algorithm RSA -out client.key
+
+openssl req -new -nodes -key client.key -out client.csr -days 3650 -subj &quot;/C=cn/OU=custer/O=custer/CN=localhost&quot; -config ./openssl.cfg -extensions v3_req
+
+openssl x509 -req -days 3650 -in client.csr -out client.pem -CA ca.pem -CAkey ca.key -CAcreateserial -extfile ./openssl.cfg -extensions v3_req
+</code></pre>
+<p>现在 Go 1.15 以上版本的 GRPC 通信，这样就完成了使用自签CA、Server、Client证书和双向认证</p>
+<h3 id="最后">最后</h3>
+<p>如果出现创建Server证书请求出现错误：</p>
+<pre><code>2604:error:08064066:object identifier routines:OBJ_create:oid exists:crypto\objects\obj_dat.c:698: error in req
+</code></pre>
+<p>创建Client证书请求出现错误</p>
+<pre><code>16524:error:08064066:object identifier routines:OBJ_create:oid exists:crypto\objects\obj_dat.c:698:error in req
+</code></pre>
+<p><strong>解决办法：关闭PowerShell 重新进入OpenSSL问题解决。</strong></p>
+<h2 id="chrome浏览器导入验证证书">chrome浏览器导入验证证书</h2>
+<p>证书分为CA权威机构认证和自签的证书。区别在于根证书的认证中心权威性不一致，CA证书的认证中心默认的已被浏览器等内置和可信，而自签的根证书认证中心需要我们自己导入可信任的颁发机构中。如果没有导入则浏览器在访问时将提示不证书机构不被信任信息存在被篡改的风险等提示。
+自签证书三部曲：
+1.生成根证书密钥+根证书
+2.生成客户端密钥，客户端请求
+3.生成用根证书签发的客户端证书</p>
+<h3 id="1生成自签根证书">1.生成自签根证书</h3>
+<pre><code>openssl genrsa -out ca.key 2048
+openssl req -x509 -new -key ca.key -out ca.pem -days 3650
+</code></pre>
+<h3 id="2生成客户端密钥和请求">2.生成客户端密钥和请求</h3>
+<pre><code>openssl genrsa -out client.key 2048
+openssl req -new -key client.key -out client.csr
+</code></pre>
+<p>###3.签发证书</p>
+<p>新建http.ext 内容如下（修改对应的域名或IP为自己的）
+授权为域名时：</p>
+<pre><code>keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth, clientAuth
+subjectAltName=@SubjectAlternativeName
+[ SubjectAlternativeName ]
+DNS.1=test.com
+DNS.2=www.test.com
+</code></pre>
+<p>授权为IP时：</p>
+<pre><code>keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth, clientAuth
+subjectAltName=@SubjectAlternativeName
+[ SubjectAlternativeName ]
+IP.1=192.168.1.1
+IP.2=192.168.1.2
+</code></pre>
+<p>签发证书指令如下:</p>
+<pre><code>openssl x509 -req -in http.csr -CA ca.pem -CAkey ca.key -CAcreateserial -out http.crt -days 3650 -sha256 -extfile http.ext
+</code></pre>
+<h3 id="4导入根证书客户端证书到浏览器可信任的颁发机构-注意转换为浏览器支持的证书格式这里以p12为例进行转换">4.导入根证书，客户端证书到浏览器可信任的颁发机构 （注意转换为浏览器支持的证书格式，这里以P12为例进行转换）</h3>
+<pre><code>openssl pkcs12 -export -in ca.pem -inkey ca.key -out ca.p12
+openssl pkcs12 -export -clcerts -in http.crt -inkey client.key -out http.p12
+</code></pre>
+<p>###最后把生成的ca.p12和http.p12导入谷歌浏览器</p>
+<p>步骤：设置 -&gt; 隐私设置和安全性 -&gt; 安全 -&gt; 管理证书</p>
+<p>以上步骤之后会出现一个弹框，可以在这个弹窗上导入证书了</p>
+<p>文章参考：</p>
+<p><a href="https://blog.csdn.net/ma_jiang/article/details/111950872">https://blog.csdn.net/ma_jiang/article/details/111950872</a><br>
+<a href="https://studygolang.com/articles/9267">https://studygolang.com/articles/9267</a>  <br>
+<a href="https://www.jianshu.com/p/71851020d372">https://www.jianshu.com/p/71851020d372</a></p>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+ 
+ 
+ 
+ window.onload = function () {
+   const header = document.getElementById('post-header');
+   const headerHeight = header.offsetHeight;
+   
+   document.documentElement.style.scrollPaddingTop = headerHeight + 10 + "px";
+ }
+
+ const tocToggleButton = document.getElementById("toc-toggle");
+
+ const tippyInstance = tippy('#toc-toggle', {
+  trigger: 'click',
+  content: '<div id="table-of-contents">\u003cnav id=\u0022TableOfContents\u0022\u003e\n  \u003cul\u003e\n    \u003cli\u003e\u003ca href=\u0022#https双向验证-自签名证书生成\u0022\u003ehttps双向验证 自签名证书生成\u003c\/a\u003e\u003c\/li\u003e\n    \u003cli\u003e\u003ca href=\u0022#第一种方法go115版本以下证书生成\u0022\u003e第一种方法：GO1.15版本以下证书生成\u003c\/a\u003e\n      \u003cul\u003e\n        \u003cli\u003e\u003ca href=\u0022#1建立我们自己的ca\u0022\u003e1、建立我们自己的CA\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#2接下来生成server端的私钥生成数字证书请求并用我们的ca私钥签发server的数字证书\u0022\u003e2、接下来，生成server端的私钥，生成数字证书请求，并用我们的ca私钥签发server的数字证书\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#3生成客户端的私钥与证书\u0022\u003e3、生成客户端的私钥与证书\u003c\/a\u003e\u003c\/li\u003e\n      \u003c\/ul\u003e\n    \u003c\/li\u003e\n    \u003cli\u003e\u003ca href=\u0022#第二种方法go115版本及15版本以上的证书生成\u0022\u003e第二种方法：GO1.15版本及1.5版本以上的证书生成\u003c\/a\u003e\n      \u003cul\u003e\n        \u003cli\u003e\u003ca href=\u0022#第1步生成-ca-根证书\u0022\u003e第1步：生成 CA 根证书\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#第2步用-openssl-生成-ca-和双方-san-证书\u0022\u003e第2步：用 openssl 生成 ca 和双方 SAN 证书。\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#第3步生成服务端证书\u0022\u003e第3步：生成服务端证书\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#第4步生成客户端证书\u0022\u003e第4步：生成客户端证书\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#最后\u0022\u003e最后\u003c\/a\u003e\u003c\/li\u003e\n      \u003c\/ul\u003e\n    \u003c\/li\u003e\n    \u003cli\u003e\u003ca href=\u0022#chrome浏览器导入验证证书\u0022\u003echrome浏览器导入验证证书\u003c\/a\u003e\n      \u003cul\u003e\n        \u003cli\u003e\u003ca href=\u0022#1生成自签根证书\u0022\u003e1.生成自签根证书\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#2生成客户端密钥和请求\u0022\u003e2.生成客户端密钥和请求\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#4导入根证书客户端证书到浏览器可信任的颁发机构-注意转换为浏览器支持的证书格式这里以p12为例进行转换\u0022\u003e4.导入根证书，客户端证书到浏览器可信任的颁发机构 （注意转换为浏览器支持的证书格式，这里以P12为例进行转换）\u003c\/a\u003e\u003c\/li\u003e\n      \u003c\/ul\u003e\n    \u003c\/li\u003e\n  \u003c\/ul\u003e\n\u003c\/nav\u003e</div>',
+  allowHTML: true,
+  placement: 'bottom-start',
+  interactive: true,
+  arrow: false,
+  maxWidth: "none",
+  onHide: function () { tocToggleButton.classList.remove("hover"); },
+  onShow: function () { tocToggleButton.classList.add("hover"); },
+  onShown: function () {
+    selectTableOfContentsOption();
+
+    if (window.hasSetupTableOfContentsListeners) {
+      return;
+    }
+
+    const tableOfContents = document.getElementById("table-of-contents");
+    tableOfContents.addEventListener('click', function () {
+      
+      tippyInstance[0].hide();
+    });
+
+    window.hasSetupTableOfContentsListeners = true;
+  }
+ });
+
+ function selectTableOfContentsOption () {
+   const optionSelectedClass = 'table-of-contents-option-selected';
+
+   const tableOfContentsOptions = document.querySelectorAll("#table-of-contents > nav > ul li");
+
+   for (const option of tableOfContentsOptions) {
+     
+
+     const [child] = option.children;
+     if (child.tagName.toLowerCase() !== 'a') {
+       continue;
+     }
+
+     if (window.location.href === child.href) {
+       child.classList.add(optionSelectedClass);
+     } else {
+       child.classList.remove(optionSelectedClass);
+     }
+   }
+ }
+
+ window.onhashchange = selectTableOfContentsOption;
+</script>
+
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://topcoder520.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+</body>
+
+<script type="application/javascript" src="https://topcoder520.github.io/js/github-style.js"></script>
+
+
+
+</html>

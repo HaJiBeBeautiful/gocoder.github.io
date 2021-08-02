@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://topcoder520.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/syntax.css' />
+    <title>golang的fuse文档 - HuangJing&#39;s blog</title>
+    
+    <link rel="icon" type="image/x-icon" href='/images/github.png'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    <meta name="description"
+  content="bazil.org/fuse 是一个用于编写FUSE用户态空间文件系统的Go库。
+" />
+<meta name="keywords"
+  content='blog, google analytics' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://topcoder520.github.io/post/golang%E7%9A%84fuse%E6%96%87%E6%A1%A3/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="golang的fuse文档 - HuangJing&#39;s blog" />
+<meta name="twitter:description"
+  content="bazil.org/fuse 是一个用于编写FUSE用户态空间文件系统的Go库。
+" />
+<meta name="twitter:site" content="https://topcoder520.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://topcoder520.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="golang的fuse文档 - HuangJing&#39;s blog">
+<meta property="og:description"
+  content="bazil.org/fuse 是一个用于编写FUSE用户态空间文件系统的Go库。
+" />
+<meta property="og:url" content="https://topcoder520.github.io/post/golang%E7%9A%84fuse%E6%96%87%E6%A1%A3/" />
+<meta property="og:site_name" content="golang的fuse文档" />
+<meta property="og:image"
+  content="https://topcoder520.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2021-08-02 21:23:41 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://topcoder520.github.io/">
+        <svg class="octicon" height="32" viewBox="0 0 16 16" version="1.1" width="32">
+          <path fill-rule="evenodd"
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+          </path>
+        </svg>
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd"
+            d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          <form target="_blank" action="https://github.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://topcoder520.github.io/">
+            </label>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://topcoder520.github.io/">
+        <svg class="octicon octicon-mark-github v-align-middle" height="32" viewBox="0 0 16 16" version="1.1"
+          width="32">
+          <path fill-rule="evenodd"
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+          </path>
+        </svg>
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+  
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+<div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://topcoder520.github.io/">
+                  <img class=" avatar-user"
+                    src="https://avatars.githubusercontent.com/u/38901719?v=4"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://topcoder520.github.io/">HuangJing</a></span><span
+                    class="path-divider">/</span><strong class="css-truncate-target mr-1" style="max-width: 410px"><a
+                      href="https://topcoder520.github.io/post/golang%E7%9A%84fuse%E6%96%87%E6%A1%A3/">golang的fuse文档</a></strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Mon, 02 Aug 2021 21:23:41 &#43;0800"
+                    class="no-wrap">
+                    Mon, 02 Aug 2021 21:23:41 &#43;0800</relative-time>
+
+                  
+                  <span class="file-info-divider"></span>
+                  Modified <relative-time datetime="Mon, 02 Aug 2021 22:13:03 &#43;0800"
+                    class="no-wrap">
+                    Mon, 02 Aug 2021 22:13:03 &#43;0800</relative-time>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" class="btn btn-octicon m-0 mr-2 p-2" aria-haspopup="menu" aria-label="Table of Contents" role="button">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                          11444 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                    
+                    <a class="muted-link mr-3" href="/tags/go">
+                      <svg class="octicon octicon-tag" viewBox="0 0 16 16" version="1.1" width="16" height="16">
+                        <path fill-rule="evenodd"
+                          d="M2.5 7.775V2.75a.25.25 0 01.25-.25h5.025a.25.25 0 01.177.073l6.25 6.25a.25.25 0 010 .354l-5.025 5.025a.25.25 0 01-.354 0l-6.25-6.25a.25.25 0 01-.073-.177zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 010 2.474l-5.026 5.026a1.75 1.75 0 01-2.474 0l-6.25-6.25A1.75 1.75 0 011 7.775zM6 5a1 1 0 100 2 1 1 0 000-2z">
+                        </path>
+                      </svg>
+                      go
+                    </a>
+                    
+                    <a class="muted-link mr-3" href="/tags/fuse">
+                      <svg class="octicon octicon-tag" viewBox="0 0 16 16" version="1.1" width="16" height="16">
+                        <path fill-rule="evenodd"
+                          d="M2.5 7.775V2.75a.25.25 0 01.25-.25h5.025a.25.25 0 01.177.073l6.25 6.25a.25.25 0 010 .354l-5.025 5.025a.25.25 0 01-.354 0l-6.25-6.25a.25.25 0 01-.073-.177zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 010 2.474l-5.026 5.026a1.75 1.75 0 01-2.474 0l-6.25-6.25A1.75 1.75 0 011 7.775zM6 5a1 1 0 100 2 1 1 0 000-2z">
+                        </path>
+                      </svg>
+                      fuse
+                    </a>
+                    
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5">
+                <article class="markdown-body entry-content container-lg"><p>bazil.org/fuse 是一个用于编写FUSE用户态空间文件系统的Go库。</p>
+<h2 id="bazilorgfuse----filesystems-in-go">bazil.org/fuse &ndash; Filesystems in Go</h2>
+<p>它是内核-用户态空间通信协议的一个从头开始的实现，并且不使用来自名为FUSE的项目的C库。bazil.org/fuse完全拥抱安全且易于编程。</p>
+<p>以下是如何开始:</p>
+<pre><code>go get bazil.org/fuse
+</code></pre>
+<p>网站: <a href="http://bazil.org/fuse/">http://bazil.org/fuse/</a></p>
+<p>Github仓库: <a href="https://github.com/bazil/fuse">https://github.com/bazil/fuse</a></p>
+<p>API文档: <a href="http://godoc.org/bazil.org/fuse">http://godoc.org/bazil.org/fuse</a></p>
+<p>非常感谢Russ Cox，这个项目是基于他的fuse代码库开始的。</p>
+<h2 id="文档">文档</h2>
+<p>概要<br>
+   <a href="#service1">服务方法</a> <br>
+   <a href="#service2">错误</a><br>
+   <a href="#service3">中断操作</a> <br>
+   <a href="#service4">身份验证</a> <br>
+   <a href="#service5">挂在操作</a></p>
+<p>包fuse支持在Linux和FreeBSD上写入fuse文件系统。</p>
+<p>编写FUSE文件系统有两种方法。第一个是讲低级消息协议，使用ReadRequest从Conn读取，使用各种response方法写入。这种方法最接近与内核的实际交互，在协议翻译等上下文中可能是最简单的方法。</p>
+<p>合成文件系统的服务器倾向于共享由第二种方法抽象出来的公共簿记，即调用fs。服务使用FS*(文件系统)、Node*(文件或目录)和Handle*(打开的文件或目录)接口中的服务方法的实现来服务FUSE协议。可以编写的此类方法数量惊人，但很少是必需的。文档中描述了这些接口的具体方法。</p>
+<p>hellofs子目录包含fs的一个简单示例。服务的方法。</p>
+<h3 id="span-idservice1-nameservice1服务方法span"><!-- raw HTML omitted -->服务方法<!-- raw HTML omitted --></h3>
+<p>FS、Node和Handle接口的必需和可选方法具有通用形式</p>
+<pre><code>Op(ctx context.Context, req *OpRequest, resp *OpResponse) error
+</code></pre>
+<p>其中Op是FUSE操作的名称。Op从req中读取请求参数并将结果写入resp。如果操作的唯一结果是错误结果，则忽略了resp参数。</p>
+<p>多个goroutine可以同时调用服务方法;被调用的方法负责适当的同步(线程安全)。</p>
+<p>操作不能保留请求或响应，包括任何[]字节字段，如WriteRequest。数据或SetxattrRequest.Xattr。</p>
+<h3 id="span-idservice2-nameservice2错误span"><!-- raw HTML omitted -->错误<!-- raw HTML omitted --></h3>
+<p>操作可能会返回错误。FUSE接口只能与文件系统客户端用POSIX errno错误号通信，该消息对文件系统客户端是不可见的。返回的错误可以实现ErrorNumber来控制返回的errno。如果没有ErrorNumber，则返回一个通用的errno (EIO)。</p>
+<p>错误消息将作为响应的一部分在调试日志中可见。</p>
+<h3 id="span-idservice3-nameservice3中断操作span"><!-- raw HTML omitted -->中断操作<!-- raw HTML omitted --></h3>
+<p>在某些文件系统中，某些操作可能会花费不确定的时间。例如，等待网络消息的Read或匹配的Write可能无限期地等待。如果请求被取消且不再需要，则上下文将被取消。阻塞操作应该选择从ctx.Done()接收的内容，如果接收成功(意味着通道关闭)，则尝试提前终止该操作。若要指示操作因中止而失败，请返回syscall.EINTR。</p>
+<p>如果一个操作不会阻塞无限长的时间，那么就没有必要支持取消。</p>
+<h3 id="span-idservice4-nameservice4身份验证span"><!-- raw HTML omitted -->身份验证<!-- raw HTML omitted --></h3>
+<p>所有请求类型都嵌入Header，这意味着该方法可以检查req.Pid、req.Uid和req.Gid，以实现权限检查。内核FUSE层通常阻止其他用户访问FUSE文件系统(要改变这一点，请参阅AllowOther)，但不强制使用访问模式(要改变这一点，请参阅DefaultPermissions)。</p>
+<h3 id="span-idservice5-nameservice5挂载操作span"><!-- raw HTML omitted -->挂载操作<!-- raw HTML omitted --></h3>
+<p>可以通过将MountOption值传递给Mount来更改挂载文件系统的行为和元数据。</p>
+<h3 id="索引">索引</h3>
+<p><a href="#pkg-1">Constants</a></p>
+<p><a href="#pkg-2">Variables</a></p>
+<p><a href="#pkg-3">func AppendDirent(data []byte, dir Dirent) []byte</a></p>
+<p><a href="#pkg-4">func Unmount(dir string) error</a></p>
+<p><a href="#pkg-5">type AccessRequest</a></p>
+<p>   func (r *AccessRequest) Respond()</p>
+<p>   func (r *AccessRequest) String() string</p>
+<p><a href="#pkg-6">type Attr</a></p>
+<p>   func (a Attr) String() string</p>
+<p><a href="#pkg-7">type BatchForgetItem</a></p>
+<p><a href="#pkg-8">type BatchForgetRequest</a></p>
+<p>   func (r *BatchForgetRequest) Respond()</p>
+<p>   func (r *BatchForgetRequest) String() string</p>
+<p><a href="#pkg-9">type Conn</a></p>
+<p>   func Mount(dir string, options &hellip;MountOption) (*Conn, error)</p>
+<p>   func (c *Conn) Close() error</p>
+<p>   func (c *Conn) Features() InitFlags</p>
+<p>   func (c *Conn) InvalidateEntry(parent NodeID, name string) error</p>
+<p>   func (c *Conn) InvalidateNode(nodeID NodeID, off int64, size int64) error</p>
+<p>   func (c *Conn) NotifyPollWakeup(wakeup PollWakeup) error</p>
+<p>   func (c *Conn) NotifyRetrieve(notificationID RequestID, nodeID NodeID, offset uint64, size uint32) (*NotifyRetrieval, error)</p>
+<p>   func (c *Conn) NotifyStore(nodeID NodeID, offset uint64, data []byte) error</p>
+<p>   func (c *Conn) Protocol() Protocol</p>
+<p>   func (c *Conn) ReadRequest() (Request, error)</p>
+<p><a href="#pkg-10">type CreateRequest</a></p>
+<p>   func (r *CreateRequest) Respond(resp *CreateResponse)</p>
+<p>   func (r *CreateRequest) String() string</p>
+<p><a href="#pkg-11">type CreateResponse</a></p>
+<p>   func (r *CreateResponse) String() string</p>
+<p><a href="#pkg-12">type DestroyRequest</a></p>
+<p>   func (r *DestroyRequest) Respond()</p>
+<p>   func (r *DestroyRequest) String() string</p>
+<p><a href="#pkg-13">type Dirent</a></p>
+<p><a href="#pkg-14">type DirentType</a></p>
+<p>   func (t DirentType) String() string</p>
+<p><a href="#pkg-15">type Errno</a></p>
+<p>   func ToErrno(err error) Errno</p>
+<p>   func (e Errno) Errno() Errno</p>
+<p>   func (e Errno) ErrnoName() string</p>
+<p>   func (e Errno) Error() string</p>
+<p>   func (e Errno) MarshalText() ([]byte, error)</p>
+<p>   func (e Errno) String() string</p>
+<p><a href="#pkg-16">type ErrorNumber</a></p>
+<p><a href="#pkg-17">type FileLock</a></p>
+<p><a href="#pkg-18">type FlushRequest</a></p>
+<p>   func (r *FlushRequest) Respond()</p>
+<p>   func (r *FlushRequest) String() string</p>
+<p><a href="#pkg-19">type ForgetRequest</a></p>
+<p>   func (r *ForgetRequest) Respond()</p>
+<p>   func (r *ForgetRequest) String() string</p>
+<p><a href="#pkg-20">type FsyncRequest</a></p>
+<p>   func (r *FsyncRequest) Respond()</p>
+<p>   func (r *FsyncRequest) String() string</p>
+<p><a href="#pkg-21">type GetattrFlags</a></p>
+<p>   func (fl GetattrFlags) String() string</p>
+<p><a href="#pkg-22">type GetattrRequest</a></p>
+<p>   func (r *GetattrRequest) Respond(resp *GetattrResponse)</p>
+<p>   func (r *GetattrRequest) String() string</p>
+<p><a href="#pkg-23">type GetattrResponse</a></p>
+<p>   func (r *GetattrResponse) String() string</p>
+<p><a href="#pkg-24">type GetxattrRequest</a></p>
+<p>   func (r *GetxattrRequest) Respond(resp *GetxattrResponse)</p>
+<p>   func (r *GetxattrRequest) String() string</p>
+<p><a href="#pkg-25">type GetxattrResponse</a></p>
+<p>   func (r *GetxattrResponse) String() string</p>
+<p><a href="#pkg-26">type HandleID</a></p>
+<p>   func (h HandleID) String() string</p>
+<p><a href="#pkg-27">type Header</a></p>
+<p>   func (h *Header) Hdr() *Header</p>
+<p>   func (h *Header) RespondError(err error)</p>
+<p>   func (h *Header) String() string</p>
+<p><a href="#pkg-28">type InitFlags</a></p>
+<p>   func (fl InitFlags) String() string</p>
+<p><a href="#pkg-29">type InterruptRequest</a></p>
+<p>   func (r *InterruptRequest) Respond()</p>
+<p>   func (r *InterruptRequest) String() string</p>
+<p><a href="#pkg-30">type LinkRequest</a></p>
+<p>   func (r *LinkRequest) Respond(resp *LookupResponse)</p>
+<p>   func (r *LinkRequest) String() string</p>
+<p><a href="#pkg-31">type ListxattrRequest</a></p>
+<p>   func (r *ListxattrRequest) Respond(resp *ListxattrResponse)</p>
+<p>   func (r *ListxattrRequest) String() string</p>
+<p><a href="#pkg-32">type ListxattrResponse</a></p>
+<p>   func (r *ListxattrResponse) Append(names &hellip;string)</p>
+<p>   func (r *ListxattrResponse) String() string</p>
+<p><a href="#pkg-33">type LockFlags</a></p>
+<p>   func (fl LockFlags) String() string</p>
+<p><a href="#pkg-34">type LockOwner</a></p>
+<p>   func (o LockOwner) String() string</p>
+<p><a href="#pkg-35">type LockRequest</a></p>
+<p>   func (r *LockRequest) Respond()</p>
+<p>   func (r *LockRequest) String() string</p>
+<p><a href="#pkg-36">type LockType</a></p>
+<p>   func (l LockType) String() string</p>
+<p><a href="#pkg-37">type LockWaitRequest</a></p>
+<p>   func (r *LockWaitRequest) Respond()</p>
+<p>   func (r *LockWaitRequest) String() string</p>
+<p><a href="#pkg-38">type LookupRequest</a></p>
+<p>   func (r *LookupRequest) Respond(resp *LookupResponse)</p>
+<p>   func (r *LookupRequest) String() string</p>
+<p><a href="#pkg-39">type LookupResponse</a></p>
+<p>   func (r *LookupResponse) String() string</p>
+<p><a href="#pkg-40">type MkdirRequest</a></p>
+<p>   func (r *MkdirRequest) Respond(resp *MkdirResponse)</p>
+<p>   func (r *MkdirRequest) String() string</p>
+<p><a href="#pkg-41">type MkdirResponse</a></p>
+<p>   func (r *MkdirResponse) String() string</p>
+<p><a href="#pkg-42">type MknodRequest</a></p>
+<p>   func (r *MknodRequest) Respond(resp *LookupResponse)</p>
+<p>   func (r *MknodRequest) String() string</p>
+<p><a href="#pkg-43">type MountOption</a></p>
+<p><a href="#pkg-44">func AllowDev() MountOption</a>
+<a href="#pkg-45">func AllowNonEmptyMount() MountOption</a></p>
+<p><a href="#pkg-46">func AllowOther() MountOption</a></p>
+<p><a href="#pkg-47">func AllowSUID() MountOption</a></p>
+<p><a href="#pkg-48">func AsyncRead() MountOption</a></p>
+<p><a href="#pkg-49">func CongestionThreshold(n uint16) MountOption</a></p>
+<p><a href="#pkg-50">func DaemonTimeout(name string) MountOption</a></p>
+<p><a href="#pkg-51">func DefaultPermissions() MountOption</a></p>
+<p><a href="#pkg-52">func FSName(name string) MountOption</a></p>
+<p><a href="#pkg-53">func LockingFlock() MountOption</a></p>
+<p><a href="#pkg-54">func LockingPOSIX() MountOption</a></p>
+<p><a href="#pkg-55">func MaxBackground(n uint16) MountOption</a></p>
+<p><a href="#pkg-56">func MaxReadahead(n uint32) MountOption</a></p>
+<p><a href="#pkg-57">func ReadOnly() MountOption</a></p>
+<p><a href="#pkg-58">func Subtype(fstype string) MountOption</a></p>
+<p><a href="#pkg-59">func WritebackCache() MountOption</a></p>
+<p><a href="#pkg-60">type MountpointDoesNotExistError</a></p>
+<p>   func (e *MountpointDoesNotExistError) Error() string</p>
+<p><a href="#pkg-61">type NodeID</a></p>
+<p>   func (n NodeID) String() string</p>
+<p><a href="#pkg-62">type NotifyReply</a></p>
+<p>   func (r *NotifyReply) String() string</p>
+<p><a href="#pkg-63">type NotifyRetrieval</a></p>
+<p>   func (n *NotifyRetrieval) Finish(r *NotifyReply) []byte</p>
+<p><a href="#pkg-64">type OldVersionError</a></p>
+<p>   func (e *OldVersionError) Error() string</p>
+<p><a href="#pkg-65">type OpenFlags</a></p>
+<p>   func (fl OpenFlags) IsReadOnly() bool</p>
+<p>   func (fl OpenFlags) IsReadWrite() bool</p>
+<p>   func (fl OpenFlags) IsWriteOnly() bool</p>
+<p>   func (fl OpenFlags) String() string</p>
+<p><a href="#pkg-66">type OpenRequest</a></p>
+<p>   func (r *OpenRequest) Respond(resp *OpenResponse)</p>
+<p>   func (r *OpenRequest) String() string</p>
+<p><a href="#pkg-67">type OpenResponse</a></p>
+<p>   func (r *OpenResponse) String() string</p>
+<p><a href="#pkg-68">type OpenResponseFlags</a></p>
+<p>   func (fl OpenResponseFlags) String() string</p>
+<p><a href="#pkg-69">type PollEvents</a></p>
+<p>   func (fl PollEvents) String() string</p>
+<p><a href="#pkg-70">type PollFlags</a></p>
+<p>   func (fl PollFlags) String() string</p>
+<p><a href="#pkg-71">type PollRequest</a></p>
+<p>   func (r *PollRequest) Respond(resp *PollResponse)</p>
+<p>   func (r *PollRequest) String() string</p>
+<p>   func (r *PollRequest) Wakeup() (_ PollWakeup, ok bool)</p>
+<p><a href="#pkg-72">type PollResponse</a></p>
+<p>   func (r *PollResponse) String() string</p>
+<p><a href="#pkg-73">type PollWakeup</a></p>
+<p>   func (p PollWakeup) String() string</p>
+<p><a href="#pkg-74">type Protocol</a></p>
+<p>   func (a Protocol) GE(b Protocol) bool</p>
+<p>   func (a Protocol) LT(b Protocol) bool</p>
+<p>   func (p Protocol) String() string</p>
+<p><a href="#pkg-75">type QueryLockRequest</a></p>
+<p>   func (r *QueryLockRequest) Respond(resp *QueryLockResponse)</p>
+<p>   func (r *QueryLockRequest) String() string</p>
+<p><a href="#pkg-76">type QueryLockResponse</a></p>
+<p>   func (r *QueryLockResponse) String() string</p>
+<p><a href="#pkg-77">type ReadFlags</a></p>
+<p>   func (fl ReadFlags) String() string</p>
+<p><a href="#pkg-78">type ReadRequest</a></p>
+<p>   func (r *ReadRequest) Respond(resp *ReadResponse)</p>
+<p>   func (r *ReadRequest) String() string</p>
+<p><a href="#pkg-79">type ReadResponse</a></p>
+<p>   func (r *ReadResponse) MarshalJSON() ([]byte, error)</p>
+<p>   func (r *ReadResponse) String() string</p>
+<p><a href="#pkg-80">type ReadlinkRequest</a></p>
+<p>   func (r *ReadlinkRequest) Respond(target string)</p>
+<p>   func (r *ReadlinkRequest) String() string</p>
+<p><a href="#pkg-81">type ReleaseFlags</a></p>
+<p>   func (fl ReleaseFlags) String() string</p>
+<p><a href="#pkg-82">type ReleaseRequest</a></p>
+<p>   func (r *ReleaseRequest) Respond()</p>
+<p>   func (r *ReleaseRequest) String() string</p>
+<p><a href="#pkg-83">type RemoveRequest</a></p>
+<p>   func (r *RemoveRequest) Respond()</p>
+<p>   func (r *RemoveRequest) String() string</p>
+<p><a href="#pkg-84">type RemovexattrRequest</a></p>
+<p>   func (r *RemovexattrRequest) Respond()</p>
+<p>   func (r *RemovexattrRequest) String() string</p>
+<p><a href="#pkg-85">type RenameRequest</a></p>
+<p>   func (r *RenameRequest) Respond()</p>
+<p>   func (r *RenameRequest) String() string</p>
+<p><a href="#pkg-86">type Request</a></p>
+<p><a href="#pkg-87">type RequestID</a></p>
+<p>   func (r RequestID) String() string</p>
+<p><a href="#pkg-88">type SetattrRequest</a></p>
+<p>   func (r *SetattrRequest) Respond(resp *SetattrResponse)</p>
+<p>   func (r *SetattrRequest) String() string</p>
+<p><a href="#pkg-89">type SetattrResponse</a></p>
+<p>   func (r *SetattrResponse) String() string</p>
+<p><a href="#pkg-90">type SetattrValid</a></p>
+<p>   func (fl SetattrValid) Atime() bool</p>
+<p>   func (fl SetattrValid) AtimeNow() bool</p>
+<p>   func (fl SetattrValid) Gid() bool</p>
+<p>   func (fl SetattrValid) Handle() bool</p>
+<p>   func (fl SetattrValid) LockOwner() bool</p>
+<p>   func (fl SetattrValid) Mode() bool</p>
+<p>   func (fl SetattrValid) Mtime() bool</p>
+<p>   func (fl SetattrValid) MtimeNow() bool</p>
+<p>   func (fl SetattrValid) Size() bool</p>
+<p>   func (fl SetattrValid) String() string</p>
+<p>   func (fl SetattrValid) Uid() bool</p>
+<p><a href="#pkg-91">type SetxattrRequest</a></p>
+<p>   func (r *SetxattrRequest) Respond()</p>
+<p>   func (r *SetxattrRequest) String() string</p>
+<p><a href="#pkg-92">type StatfsRequest</a></p>
+<p>   func (r *StatfsRequest) Respond(resp *StatfsResponse)</p>
+<p>   func (r *StatfsRequest) String() string</p>
+<p><a href="#pkg-93">type StatfsResponse</a></p>
+<p>   func (r *StatfsResponse) String() string</p>
+<p><a href="#pkg-94">type SymlinkRequest</a></p>
+<p>   func (r *SymlinkRequest) Respond(resp *SymlinkResponse)</p>
+<p>   func (r *SymlinkRequest) String() string</p>
+<p><a href="#pkg-95">type SymlinkResponse</a></p>
+<p>   func (r *SymlinkResponse) String() string</p>
+<p><a href="#pkg-96">type UnlockRequest</a></p>
+<p>   func (r *UnlockRequest) Respond()</p>
+<p>   func (r *UnlockRequest) String() string</p>
+<p><a href="#pkg-97">type UnrecognizedRequest</a></p>
+<p>   func (r *UnrecognizedRequest) String() string</p>
+<p><a href="#pkg-98">type WriteFlags</a></p>
+<p>   func (fl WriteFlags) String() string</p>
+<p><a href="#pkg-99">type WriteRequest</a></p>
+<p>   func (r *WriteRequest) MarshalJSON() ([]byte, error)</p>
+<p>   func (r *WriteRequest) Respond(resp *WriteResponse)</p>
+<p>   func (r *WriteRequest) String() string</p>
+<p><a href="#pkg-100">type WriteResponse</a></p>
+<p>   func (r *WriteResponse) String() string</p>
+<h3 id="span-idpkg-1constantsspan"><!-- raw HTML omitted -->Constants<!-- raw HTML omitted --></h3>
+<pre><code>const (
+	// ENOSYS indicates that the call is not supported.
+	ENOSYS = Errno(syscall.ENOSYS)
+
+	// ESTALE is used by Serve to respond to violations of the FUSE protocol.
+	ESTALE = Errno(syscall.ESTALE)
+
+	ENOENT = Errno(syscall.ENOENT)
+	EIO    = Errno(syscall.EIO)
+	EPERM  = Errno(syscall.EPERM)
+
+	// EINTR indicates request was interrupted by an InterruptRequest.
+	// See also fs.Intr.
+	EINTR = Errno(syscall.EINTR)
+
+	ERANGE  = Errno(syscall.ERANGE)
+	ENOTSUP = Errno(syscall.ENOTSUP)
+	EEXIST  = Errno(syscall.EEXIST)
+)
+</code></pre>
+<p>已弃用:返回系统调用。直接Errno。具体规则见ToErrno。</p>
+<pre><code>const DefaultErrno = EIO
+</code></pre>
+<p>DefaultErrno是当返回的错误没有实现ErrorNumber时使用的errno。</p>
+<pre><code>const (
+	ENODATA = Errno(syscall.ENODATA)
+)
+</code></pre>
+<p> </p>
+<pre><code>const ErrNoXattr = errNoXattr
+</code></pre>
+<p>ErrNoXattr是一个平台无关的错误值，表示未找到扩展属性。它可以用于响应GetxattrRequest等。</p>
+<h3 id="span-idpkg-2variablesspan"><!-- raw HTML omitted -->Variables<!-- raw HTML omitted --></h3>
+<pre><code>var (
+	OSXFUSELocationV3 = OSXFUSEPaths{
+        DevicePrefix: &quot;/dev/osxfuse&quot;,
+        Load:         &quot;/Library/Filesystems/osxfuse.fs/Contents/Resources/load_osxfuse&quot;,
+        Mount:        &quot;/Library/Filesystems/osxfuse.fs/Contents/Resources/mount_osxfuse&quot;,
+        DaemonVar:    &quot;MOUNT_OSXFUSE_DAEMON_PATH&quot;,
+	}
+	OSXFUSELocationV2 = OSXFUSEPaths{
+        DevicePrefix: &quot;/dev/osxfuse&quot;,
+        Load:         &quot;/Library/Filesystems/osxfusefs.fs/Support/load_osxfusefs&quot;,
+        Mount:        &quot;/Library/Filesystems/osxfusefs.fs/Support/mount_osxfusefs&quot;,
+        DaemonVar:    &quot;MOUNT_FUSEFS_DAEMON_PATH&quot;,
+	}
+)
+</code></pre>
+<p>已弃用:未使用，OS X残余。</p>
+<pre><code>var Debug func(msg interface{}) = nop
+</code></pre>
+<p>调用Debug以输出调试消息，包括协议跟踪。默认的行为是什么都不做。</p>
+<p>消息具有人类友好的字符串表示形式，可以安全地封送到JSON中。</p>
+<p>实现不能保留msg。</p>
+<pre><code>var (
+	ErrClosedWithoutInit = errors.New(&quot;fuse connection closed without init&quot;)
+)
+</code></pre>
+<p> </p>
+<pre><code>var (
+	ErrNotCached = notCachedError{}
+)
+</code></pre>
+<p> </p>
+<pre><code>var (
+	// Deprecated: Never used, OS X remnant.
+	ErrOSXFUSENotFound = errors.New(&quot;cannot locate OSXFUSE&quot;)
+)
+</code></pre>
+<h3 id="functions">Functions</h3>
+<h3 id="span-idpkg-3func-appenddirentspan"><!-- raw HTML omitted -->func AppendDirent<!-- raw HTML omitted --></h3>
+<pre><code>func AppendDirent(data []byte, dir Dirent) []byte
+</code></pre>
+<p>AppendDirent将目录条目的编码形式附加到数据并返回切片。</p>
+<h3 id="span-idpkg-4func-unmountspan"><!-- raw HTML omitted -->func Unmount<!-- raw HTML omitted --></h3>
+<pre><code>func Unmount(dir string) error
+</code></pre>
+<p>Unmount尝试卸载在dir上挂载的文件系统。</p>
+<h3 id="types">Types</h3>
+<h3 id="span-idpkg-5type-accessrequest-span"><!-- raw HTML omitted -->type AccessRequest <!-- raw HTML omitted --></h3>
+<pre><code>type AccessRequest struct {
+	Header `json:&quot;-&quot;`
+	Mask   uint32
+}
+</code></pre>
+<p>AccessRequest询问是否可以根据掩码指定的目的访问该文件。</p>
+<h3 id="func-accessrequest-respond">func (*AccessRequest) Respond</h3>
+<pre><code>func (r *AccessRequest) Respond()
+</code></pre>
+<p>Respond 对请求的响应，指示允许访问。要拒绝访问，请使用RespondError。</p>
+<h3 id="func-accessrequest-string">func (*AccessRequest) String</h3>
+<pre><code>func (r *AccessRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-6type-attrspan"><!-- raw HTML omitted -->type Attr<!-- raw HTML omitted --></h3>
+<pre><code>type Attr struct {
+	Valid time.Duration // how long Attr can be cached
+
+	Inode     uint64      // inode number
+	Size      uint64      // size in bytes
+	Blocks    uint64      // size in 512-byte units
+	Atime     time.Time   // time of last access
+	Mtime     time.Time   // time of last modification
+	Ctime     time.Time   // time of last inode change
+	Mode      os.FileMode // file mode
+	Nlink     uint32      // number of links (usually 1)
+	Uid       uint32      // owner uid
+	Gid       uint32      // group gid
+	Rdev      uint32      // device numbers
+	BlockSize uint32      // preferred blocksize for filesystem I/O
+
+	// Deprecated: Not used, OS X remnant.
+	Crtime time.Time
+	// Deprecated: Not used, OS X remnant.
+	Flags uint32
+}
+</code></pre>
+<p>Attr是单个文件或目录的元数据。</p>
+<h3 id="func-attr-string">func (Attr) String</h3>
+<pre><code>func (a Attr) String() string
+</code></pre>
+<h3 id="span-idpkg-7type-batchforgetitemspan"><!-- raw HTML omitted -->type BatchForgetItem<!-- raw HTML omitted --></h3>
+<pre><code>type BatchForgetItem struct {
+	NodeID NodeID
+	N      uint64
+}
+</code></pre>
+<h3 id="span-idpkg-8type-batchforgetrequestspan"><!-- raw HTML omitted -->type BatchForgetRequest<!-- raw HTML omitted --></h3>
+<pre><code>type BatchForgetRequest struct {
+	Header `json:&quot;-&quot;`
+	Forget []BatchForgetItem
+}
+</code></pre>
+<h3 id="func-batchforgetrequest-respond">func (*BatchForgetRequest) Respond</h3>
+<pre><code>func (r *BatchForgetRequest) Respond()
+</code></pre>
+<p>对请求进行回复，表明遗忘已被记录。</p>
+<h3 id="func-batchforgetrequest-string">func (*BatchForgetRequest) String</h3>
+<pre><code>func (r *BatchForgetRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-9type-connspan"><!-- raw HTML omitted -->type Conn<!-- raw HTML omitted --></h3>
+<pre><code>type Conn struct {
+	// Always closed, mount is ready when Mount returns.
+	//
+	// Deprecated: Not used, OS X remnant.
+	Ready &lt;-chan struct{}
+
+	// Use error returned from Mount.
+	//
+	// Deprecated: Not used, OS X remnant.
+	MountError error
+	// contains filtered or unexported fields
+}
+</code></pre>
+<p>Conn表示一个fuse到挂载用户态文件系统的连接。</p>
+<h3 id="func-mount">func Mount</h3>
+<pre><code>func Mount(dir string, options ...MountOption) (*Conn, error)
+</code></pre>
+<p>Mount在命名目录上挂载一个新的FUSE连接，并返回一个用于读写FUSE消息的连接。</p>
+<p>在成功返回后，调用者必须调用Close来释放资源。</p>
+<h3 id="func-conn-close">func (*Conn) Close</h3>
+<pre><code>func (c *Conn) Close() error
+</code></pre>
+<p>Close 关闭fuse连接</p>
+<h3 id="func-conn-features">func (*Conn) Features</h3>
+<pre><code>func (c *Conn) Features() InitFlags
+</code></pre>
+<p>Features报告内核和FUSE库之间协商的特性标志。有关如何影响激活的特性，请参阅挂载。</p>
+<h3 id="func-conn-invalidateentry">func (*Conn) InvalidateEntry</h3>
+<pre><code>func (c *Conn) InvalidateEntry(parent NodeID, name string) error
+</code></pre>
+<p>InvalidateEntry让名为name的目录条目的内核缓存失效,失效的目录条目由父节点的NodeID和目录条目的name确定。</p>
+<p>内核可能缓存目录列表，也可能不缓存。要使它们无效，请使用InvalidateNode使目录的所有数据无效。(截至2015-06,Linux FUSE不缓存目录清单。)</p>
+<p>如果内核当前没有缓存节点，则返回ErrNotCached。</p>
+<h3 id="func-conn-invalidatenode">func (*Conn) InvalidateNode</h3>
+<pre><code>func (c *Conn) InvalidateNode(nodeID NodeID, off int64, size int64) error
+</code></pre>
+<p>InvalidateNode使一个节点的属性和节点关联的指定范围的数据在内核中的缓存失效。</p>
+<p>offset为0,size为-1表示所有数据。要仅使属性无效，请给出偏移量0和大小0。</p>
+<p>如果内核当前没有缓存节点，则返回ErrNotCached。</p>
+<h3 id="func-conn-notifypollwakeup">func (*Conn) NotifyPollWakeup</h3>
+<pre><code>func (c *Conn) NotifyPollWakeup(wakeup PollWakeup) error
+</code></pre>
+<p>NotifyPollWakeup向内核发送一个通知，以唤醒所有等待该节点的客户端。Wakeup是当前处于活动状态的句柄或节点的PollRequest中的值(还没有对其调用Forget)。</p>
+<h3 id="func-conn-notifyretrieve">func (*Conn) NotifyRetrieve</h3>
+<pre><code>func (c *Conn) NotifyRetrieve(notificationID RequestID, nodeID NodeID, offset uint64, size uint32) (*NotifyRetrieval, error)
+</code></pre>
+<h3 id="func-conn-notifystore">func (*Conn) NotifyStore</h3>
+<pre><code>func (c *Conn) NotifyStore(nodeID NodeID, offset uint64, data []byte) error
+</code></pre>
+<h3 id="func-conn-protocol">func (*Conn) Protocol</h3>
+<pre><code>func (c *Conn) Protocol() Protocol
+</code></pre>
+<h3 id="func-conn-readrequest">func (*Conn) ReadRequest</h3>
+<pre><code>func (c *Conn) ReadRequest() (Request, error)
+</code></pre>
+<p>ReadRequest返回内核的下一个FUSE请求。</p>
+<p>调用者必须调用其中一个请求。回复或请求。在合理的时间内响应错误。呼叫者不能在呼叫后保留请求。</p>
+<h3 id="span-idpkg-10type-createrequestspan"><!-- raw HTML omitted -->type CreateRequest<!-- raw HTML omitted --></h3>
+<pre><code>type CreateRequest struct {
+	Header `json:&quot;-&quot;`
+	Name   string
+	Flags  OpenFlags
+	Mode   os.FileMode
+	// Umask of the request.
+	Umask os.FileMode
+}
+</code></pre>
+<p>CreateRequest请求创建并打开一个文件(而不是目录)。</p>
+<h3 id="func-createrequest-respond">func (*CreateRequest) Respond</h3>
+<pre><code>func (r *CreateRequest) Respond(resp *CreateResponse)
+</code></pre>
+<p>使用给定的响应响应请求。</p>
+<h3 id="func-createrequest-string">func (*CreateRequest) String</h3>
+<pre><code>func (r *CreateRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-11type-createresponsespan"><!-- raw HTML omitted -->type CreateResponse<!-- raw HTML omitted --></h3>
+<pre><code>type CreateResponse struct {
+	LookupResponse
+	OpenResponse
+}
+</code></pre>
+<p>createrresponse是对CreateRequest的响应。它描述创建的节点和打开的句柄。</p>
+<h3 id="func-createresponse-string">func (*CreateResponse) String</h3>
+<pre><code>func (r *CreateResponse) String() string
+</code></pre>
+<h3 id="span-idpkg-12type-destroyrequestspan"><!-- raw HTML omitted -->type DestroyRequest<!-- raw HTML omitted --></h3>
+<pre><code>type DestroyRequest struct {
+	Header `json:&quot;-&quot;`
+}
+</code></pre>
+<p>在卸载文件系统时，内核发送DestroyRequest。在此之后将不会收到更多请求，但它仍然应该得到响应。</p>
+<h3 id="func-destroyrequest-respond">func (*DestroyRequest) Respond</h3>
+<pre><code>func (r *DestroyRequest) Respond()
+</code></pre>
+<p>对请求作出响应。</p>
+<h3 id="func-destroyrequest-string">func (*DestroyRequest) String</h3>
+<pre><code>func (r *DestroyRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-13type-direntspan"><!-- raw HTML omitted -->type Dirent<!-- raw HTML omitted --></h3>
+<pre><code>type Dirent struct {
+	// Inode this entry names.
+	Inode uint64
+
+	// Type of the entry, for example DT_File.
+	//
+	// Setting this is optional. The zero value (DT_Unknown) means
+	// callers will just need to do a Getattr when the type is
+	// needed. Providing a type can speed up operations
+	// significantly.
+	Type DirentType
+
+	// Name of the entry
+	Name string
+}
+</code></pre>
+<p>Dirent表示单个目录条目。</p>
+<h3 id="span-idpkg-14type-direnttypespan"><!-- raw HTML omitted -->type DirentType<!-- raw HTML omitted --></h3>
+<pre><code>type DirentType uint32
+</code></pre>
+<p>目录列表中条目的类型。</p>
+<pre><code>const (
+	DT_Unknown DirentType = 0
+	DT_Socket  DirentType = syscall.S_IFSOCK &gt;&gt; 12
+	DT_Link    DirentType = syscall.S_IFLNK &gt;&gt; 12
+	DT_File    DirentType = syscall.S_IFREG &gt;&gt; 12
+	DT_Block   DirentType = syscall.S_IFBLK &gt;&gt; 12
+	DT_Dir     DirentType = syscall.S_IFDIR &gt;&gt; 12
+	DT_Char    DirentType = syscall.S_IFCHR &gt;&gt; 12
+	DT_FIFO    DirentType = syscall.S_IFIFO &gt;&gt; 12
+)
+</code></pre>
+<h3 id="func-direnttype-string">func (DirentType) String</h3>
+<pre><code>func (t DirentType) String() string
+</code></pre>
+<h3 id="span-idpkg-15type-errnospan"><!-- raw HTML omitted -->type Errno<!-- raw HTML omitted --></h3>
+<pre><code>type Errno syscall.Errno
+</code></pre>
+<p>Errno使用一个系统调用来实现Error和ErrorNumber。</p>
+<h3 id="func-toerrno">func ToErrno</h3>
+<pre><code>func ToErrno(err error) Errno
+</code></pre>
+<p>ToErrno将任意错误转换为Errno。</p>
+<p>如果err的基本类型是系统调用。Errno，直接使用。没有完成解包装，以防止错误错误泄漏，例如*os.PathError。</p>
+<p>如果err解包装以实现ErrorNumber，则使用ErrorNumber。</p>
+<p>最后,返回DefaultErrno。</p>
+<h3 id="func-errno-errno">func (Errno) Errno</h3>
+<pre><code>func (e Errno) Errno() Errno
+</code></pre>
+<h3 id="func-errno-errnoname">func (Errno) ErrnoName</h3>
+<pre><code>func (e Errno) ErrnoName() string
+</code></pre>
+<p>ErrnoName返回此errno的短非数字标识符。例如,“EIO”。</p>
+<h3 id="func-errno-error">func (Errno) Error</h3>
+<pre><code>func (e Errno) Error() string
+</code></pre>
+<h3 id="func-errno-marshaltext">func (Errno) MarshalText</h3>
+<pre><code>func (e Errno) MarshalText() ([]byte, error)
+</code></pre>
+<h3 id="func-errno-string">func (Errno) String</h3>
+<pre><code>func (e Errno) String() string
+</code></pre>
+<h3 id="span-idpkg-16type-errornumberspan"><!-- raw HTML omitted -->type ErrorNumber<!-- raw HTML omitted --></h3>
+<pre><code>type ErrorNumber interface {
+	// Errno returns the the error number (errno) for this error.
+	Errno() Errno
+}
+</code></pre>
+<p>ErrorNumber是一个带有特定错误号的错误。</p>
+<p>操作可以返回一个错误值，该值实现了ErrorNumber来控制要返回的错误号(errno)。</p>
+<h3 id="span-idpkg-17type-filelockspan"><!-- raw HTML omitted -->type FileLock<!-- raw HTML omitted --></h3>
+<pre><code>type FileLock struct {
+	Start uint64
+	End   uint64
+	Type  LockType
+	PID   int32
+}
+</code></pre>
+<h3 id="span-idpkg-18type-flushrequest-span"><!-- raw HTML omitted -->type FlushRequest <!-- raw HTML omitted --></h3>
+<pre><code>type FlushRequest struct {
+	Header `json:&quot;-&quot;`
+	Handle HandleID
+	// Deprecated: Unused since 2006.
+	Flags     uint32
+	LockOwner LockOwner
+}
+</code></pre>
+<p>FlushRequest请求将打开文件的当前状态刷新到存储中，就像关闭文件描述符一样。一个打开的句柄可能在其生命周期内接收多个flushrequest。</p>
+<h3 id="func-flushrequest-respond">func (*FlushRequest) Respond</h3>
+<pre><code>func (r *FlushRequest) Respond()
+</code></pre>
+<p>响应对请求的响应，表明刷新成功。</p>
+<h3 id="func-flushrequest-string">func (*FlushRequest) String</h3>
+<pre><code>func (r *FlushRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-19type-forgetrequest-span"><!-- raw HTML omitted -->type ForgetRequest <!-- raw HTML omitted --></h3>
+<pre><code>type ForgetRequest struct {
+	Header `json:&quot;-&quot;`
+	N      uint64
+}
+</code></pre>
+<p>当忘记r.N查找请求返回的r.Node时，内核发送一个ForgetRequest。</p>
+<h3 id="func-forgetrequest-respond">func (*ForgetRequest) Respond</h3>
+<pre><code>func (r *ForgetRequest) Respond()
+</code></pre>
+<p>对请求进行回复，表明遗忘已被记录。</p>
+<h3 id="func-forgetrequest-string">func (*ForgetRequest) String</h3>
+<pre><code>func (r *ForgetRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-20type-fsyncrequestspan"><!-- raw HTML omitted -->type FsyncRequest<!-- raw HTML omitted --></h3>
+<pre><code>type FsyncRequest struct {
+	Header `json:&quot;-&quot;`
+	Handle HandleID
+	// TODO bit 1 is datasync, not well documented upstream
+	Flags uint32
+	Dir   bool
+}
+</code></pre>
+<h3 id="func-fsyncrequest-respond">func (*FsyncRequest) Respond</h3>
+<pre><code>func (r *FsyncRequest) Respond()
+</code></pre>
+<h3 id="func-fsyncrequest-string">func (*FsyncRequest) String</h3>
+<pre><code>func (r *FsyncRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-21type-getattrflagsspan"><!-- raw HTML omitted -->type GetattrFlags<!-- raw HTML omitted --></h3>
+<pre><code>type GetattrFlags uint32
+</code></pre>
+<p>GetattrFlags是可以在GetattrRequest中看到的位标志。</p>
+<pre><code>const (
+	// Indicates the handle is valid.
+	GetattrFh GetattrFlags = 1 &lt;&lt; 0
+)
+</code></pre>
+<h3 id="func-getattrflags-string">func (GetattrFlags) String</h3>
+<pre><code>func (fl GetattrFlags) String() string
+</code></pre>
+<h3 id="span-idpkg-22type-getattrrequestspan"><!-- raw HTML omitted -->type GetattrRequest<!-- raw HTML omitted --></h3>
+<pre><code>type GetattrRequest struct {
+	Header `json:&quot;-&quot;`
+	Flags  GetattrFlags
+	Handle HandleID
+}
+</code></pre>
+<p>GetattrRequest请求由r.Node表示的文件的元数据。</p>
+<h3 id="func-getattrrequest-respond">func (*GetattrRequest) Respond</h3>
+<pre><code>func (r *GetattrRequest) Respond(resp *GetattrResponse)
+</code></pre>
+<p>使用给定的响应响应请求。</p>
+<h3 id="func-getattrrequest-string">func (*GetattrRequest) String</h3>
+<pre><code>func (r *GetattrRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-23type-getattrresponsespan"><!-- raw HTML omitted -->type GetattrResponse<!-- raw HTML omitted --></h3>
+<pre><code>type GetattrResponse struct {
+	Attr Attr // file attributes
+}
+</code></pre>
+<p>GetattrResponse是对GetattrRequest的响应。</p>
+<h3 id="func-getattrresponse-string">func (*GetattrResponse) String</h3>
+<pre><code>func (r *GetattrResponse) String() string
+</code></pre>
+<h3 id="span-idpkg-24type-getxattrrequestspan"><!-- raw HTML omitted -->type GetxattrRequest<!-- raw HTML omitted --></h3>
+<pre><code>type GetxattrRequest struct {
+	Header `json:&quot;-&quot;`
+
+	// Maximum size to return.
+	Size uint32
+
+	// Name of the attribute requested.
+	Name string
+
+	// Deprecated: Not used, OS X remnant.
+	Position uint32
+}
+</code></pre>
+<p>GetxattrRequest请求与r.Node关联的扩展属性。</p>
+<h3 id="func-getxattrrequest-respond">func (*GetxattrRequest) Respond</h3>
+<pre><code>func (r *GetxattrRequest) Respond(resp *GetxattrResponse)
+</code></pre>
+<p>使用给定的响应响应请求。</p>
+<h3 id="func-getxattrrequest-string">func (*GetxattrRequest) String</h3>
+<pre><code>func (r *GetxattrRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-25type-getxattrresponse-span"><!-- raw HTML omitted -->type GetxattrResponse <!-- raw HTML omitted --></h3>
+<pre><code>type GetxattrResponse struct {
+	Xattr []byte
+}
+</code></pre>
+<p>GetxattrResponse是对GetxattrRequest的响应。</p>
+<h3 id="func-getxattrresponse-string">func (*GetxattrResponse) String</h3>
+<pre><code>func (r *GetxattrResponse) String() string
+</code></pre>
+<h3 id="span-idpkg-26type-handleidspan"><!-- raw HTML omitted -->type HandleID<!-- raw HTML omitted --></h3>
+<pre><code>type HandleID uint64
+</code></pre>
+<p>HandleID是标识打开目录或文件的数字。它只需要在目录或文件打开时是唯一的。</p>
+<h3 id="func-handleid-string">func (HandleID) String</h3>
+<pre><code>func (h HandleID) String() string
+</code></pre>
+<h3 id="span-idpkg-27type-headerspan"><!-- raw HTML omitted -->type Header<!-- raw HTML omitted --></h3>
+<pre><code>type Header struct {
+	Conn *Conn     `json:&quot;-&quot;` // connection this request was received on
+	ID   RequestID // unique ID for request
+	Node NodeID    // file or directory the request is about
+	Uid  uint32    // user ID of process making request
+	Gid  uint32    // group ID of process making request
+	Pid  uint32    // process ID of process making request
+	// contains filtered or unexported fields
+}
+</code></pre>
+<p>Header描述了在每个请求中发送的基本信息。</p>
+<h3 id="func-header-hdr">func (*Header) Hdr</h3>
+<pre><code>func (h *Header) Hdr() *Header
+</code></pre>
+<h3 id="func-header-responderror">func (*Header) RespondError</h3>
+<pre><code>func (h *Header) RespondError(err error)
+</code></pre>
+<h3 id="func-header-string">func (*Header) String</h3>
+<pre><code>func (h *Header) String() string
+</code></pre>
+<h3 id="span-idpkg-28type-initflagsspan"><!-- raw HTML omitted -->type InitFlags<!-- raw HTML omitted --></h3>
+<pre><code>type InitFlags uint32
+</code></pre>
+<p>InitFlags在Init交换中使用。</p>
+<pre><code>const (
+	InitAsyncRead     InitFlags = 1 &lt;&lt; 0
+	InitPOSIXLocks    InitFlags = 1 &lt;&lt; 1
+	InitFileOps       InitFlags = 1 &lt;&lt; 2
+	InitAtomicTrunc   InitFlags = 1 &lt;&lt; 3
+	InitExportSupport InitFlags = 1 &lt;&lt; 4
+	InitBigWrites     InitFlags = 1 &lt;&lt; 5
+	// Do not mask file access modes with umask.
+	InitDontMask        InitFlags = 1 &lt;&lt; 6
+	InitSpliceWrite     InitFlags = 1 &lt;&lt; 7
+	InitSpliceMove      InitFlags = 1 &lt;&lt; 8
+	InitSpliceRead      InitFlags = 1 &lt;&lt; 9
+	InitFlockLocks      InitFlags = 1 &lt;&lt; 10
+	InitHasIoctlDir     InitFlags = 1 &lt;&lt; 11
+	InitAutoInvalData   InitFlags = 1 &lt;&lt; 12
+	InitDoReaddirplus   InitFlags = 1 &lt;&lt; 13
+	InitReaddirplusAuto InitFlags = 1 &lt;&lt; 14
+	InitAsyncDIO        InitFlags = 1 &lt;&lt; 15
+	InitWritebackCache  InitFlags = 1 &lt;&lt; 16
+	InitNoOpenSupport   InitFlags = 1 &lt;&lt; 17
+)
+</code></pre>
+<h3 id="func-initflags-string">func (InitFlags) String</h3>
+<pre><code>func (fl InitFlags) String() string
+</code></pre>
+<h3 id="span-idpkg-29type-interruptrequest-span"><!-- raw HTML omitted -->type InterruptRequest <!-- raw HTML omitted --></h3>
+<pre><code>type InterruptRequest struct {
+	Header `json:&quot;-&quot;`
+	IntrID RequestID // ID of the request to be interrupt.
+}
+</code></pre>
+<p>InterruptRequest是一个中断另一个挂起请求的请求。对该请求的响应应该返回一个EINTR的错误状态。</p>
+<h3 id="func-interruptrequest-respond">func (*InterruptRequest) Respond</h3>
+<pre><code>func (r *InterruptRequest) Respond()
+</code></pre>
+<h3 id="func-interruptrequest-string">func (*InterruptRequest) String</h3>
+<pre><code>func (r *InterruptRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-30type-linkrequest-span"><!-- raw HTML omitted -->type LinkRequest <!-- raw HTML omitted --></h3>
+<pre><code>type LinkRequest struct {
+	Header  `json:&quot;-&quot;`
+	OldNode NodeID
+	NewName string
+}
+</code></pre>
+<p>LinkRequest是创建硬链接的请求。</p>
+<h3 id="func-linkrequest-respond">func (*LinkRequest) Respond</h3>
+<pre><code>func (r *LinkRequest) Respond(resp *LookupResponse)
+</code></pre>
+<h3 id="func-linkrequest-string">func (*LinkRequest) String</h3>
+<pre><code>func (r *LinkRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-31type-listxattrrequestspan"><!-- raw HTML omitted -->type ListxattrRequest<!-- raw HTML omitted --></h3>
+<pre><code>type ListxattrRequest struct {
+	Header `json:&quot;-&quot;`
+	Size   uint32 // maximum size to return
+
+	// Deprecated: Not used, OS X remnant.
+	Position uint32
+}
+</code></pre>
+<p>ListxattrRequest请求列出与r.Node关联的扩展属性。</p>
+<h3 id="func-listxattrrequest-respond">func (*ListxattrRequest) Respond</h3>
+<pre><code>func (r *ListxattrRequest) Respond(resp *ListxattrResponse)
+</code></pre>
+<p>使用给定的响应响应请求。</p>
+<h3 id="func-listxattrrequest-string">func (*ListxattrRequest) String</h3>
+<pre><code>func (r *ListxattrRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-32type-listxattrresponsespan"><!-- raw HTML omitted -->type ListxattrResponse<!-- raw HTML omitted --></h3>
+<pre><code>type ListxattrResponse struct {
+	Xattr []byte
+}
+</code></pre>
+<p>一个ListxattrResponse是对一个ListxattrRequest的响应。</p>
+<h3 id="func-listxattrresponse-append">func (*ListxattrResponse) Append</h3>
+<pre><code>func (r *ListxattrResponse) Append(names ...string)
+</code></pre>
+<p>Append向响应中添加扩展属性名。</p>
+<h3 id="func-listxattrresponse-string">func (*ListxattrResponse) String</h3>
+<pre><code>func (r *ListxattrResponse) String() string
+</code></pre>
+<h3 id="span-idpkg-33type-lockflagsspan"><!-- raw HTML omitted -->type LockFlags<!-- raw HTML omitted --></h3>
+<pre><code>type LockFlags uint32
+</code></pre>
+<p>LockFlags在LockRequest或LockWaitRequest中传递。</p>
+<pre><code>const (
+	// BSD-style flock lock (not POSIX lock)
+	LockFlock LockFlags = 1 &lt;&lt; 0
+)
+</code></pre>
+<h3 id="func-lockflags-string">func (LockFlags) String</h3>
+<pre><code>func (fl LockFlags) String() string
+</code></pre>
+<h3 id="span-idpkg-34type-lockownerspan"><!-- raw HTML omitted -->type LockOwner<!-- raw HTML omitted --></h3>
+<pre><code>type LockOwner uint64
+</code></pre>
+<p>LockOwner是内核分配的文件本地不透明标识符，用于标识特定锁的所有者。</p>
+<h3 id="func-lockowner-string">func (LockOwner) String</h3>
+<pre><code>func (o LockOwner) String() string
+</code></pre>
+<h3 id="span-idpkg-35type-lockrequestspan"><!-- raw HTML omitted -->type LockRequest<!-- raw HTML omitted --></h3>
+<pre><code>type LockRequest struct {
+	Header
+	Handle HandleID
+	// LockOwner is a unique identifier for the originating client, to
+	// identify locks.
+	LockOwner LockOwner
+	Lock      FileLock
+	LockFlags LockFlags
+}
+</code></pre>
+<p>LockRequest请求尝试获取节点上的字节范围锁。响应应该是立即的，而不是等待获取锁。</p>
+<p>解锁就可以</p>
+<pre><code>- explicit with UnlockRequest
+- for flock: implicit on final close (ReleaseRequest.ReleaseFlags
+  has ReleaseFlockUnlock set)
+- for POSIX locks: implicit on any close (FlushRequest)
+- for Open File Description locks: implicit on final close
+  (no LockOwner observed as of 2020-04)
+</code></pre>
+<p>请参阅LockFlags了解正在请求的锁的类型。(截至2020-04年，打开文件描述符锁与POSIX没有区别。这意味着使用这些锁的程序在关闭基于fuse的分布式文件系统上的fd时很可能会行为不端，因为文件系统只知道遵循POSIX锁定规则并过早释放全局锁。)</p>
+<p>flock (BSD)和POSIX (fcntl F_SETLK)锁之间的大多数其他区别只与调用方有关，与文件系统无关。FUSE总是看到范围，并将flock整个文件锁视为对最大字节范围的请求。文件系统也应该这样做，因为这为linux本地的Open文件描述锁提供了向前兼容路径。</p>
+<p>要在FUSE中启用锁定事件，请将LockingFlock()和/或LockingPOSIX()传递给Mount。</p>
+<p>也看到LockWaitRequest。</p>
+<h3 id="func-lockrequest-respond">func (*LockRequest) Respond</h3>
+<pre><code>func (r *LockRequest) Respond()
+</code></pre>
+<h3 id="func-lockrequest-string">func (*LockRequest) String</h3>
+<pre><code>func (r *LockRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-36type-locktypespan"><!-- raw HTML omitted -->type LockType<!-- raw HTML omitted --></h3>
+<pre><code>type LockType uint32
+</code></pre>
+<p> </p>
+<pre><code>const (
+	LockRead   LockType = unix.F_RDLCK
+	LockWrite  LockType = unix.F_WRLCK
+	LockUnlock LockType = unix.F_UNLCK
+)
+</code></pre>
+<h3 id="func-locktype-string">func (LockType) String</h3>
+<pre><code>func (l LockType) String() string
+</code></pre>
+<h3 id="span-idpkg-37type-lockwaitrequestspan"><!-- raw HTML omitted -->type LockWaitRequest<!-- raw HTML omitted --></h3>
+<pre><code>type LockWaitRequest LockRequest
+</code></pre>
+<p>LockWaitRequest请求获取节点上的字节范围锁，延迟响应，直到获得锁(或请求被中断)。</p>
+<p>看到LockRequest。LockWaitRequest可以转换为LockRequest。</p>
+<h3 id="func-lockwaitrequest-respond">func (*LockWaitRequest) Respond</h3>
+<pre><code>func (r *LockWaitRequest) Respond()
+</code></pre>
+<h3 id="func-lockwaitrequest-string">func (*LockWaitRequest) String</h3>
+<pre><code>func (r *LockWaitRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-38type-lookuprequestspan"><!-- raw HTML omitted -->type LookupRequest<!-- raw HTML omitted --></h3>
+<pre><code>type LookupRequest struct {
+	Header `json:&quot;-&quot;`
+	Name   string
+}
+</code></pre>
+<p>一个LookupRequest请求在r.Node命名的目录中查找给定的名称。</p>
+<h3 id="func-lookuprequest-respond">func (*LookupRequest) Respond</h3>
+<pre><code>func (r *LookupRequest) Respond(resp *LookupResponse)
+</code></pre>
+<p>使用给定的响应响应请求。</p>
+<h3 id="func-lookuprequest-string">func (*LookupRequest) String</h3>
+<pre><code>func (r *LookupRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-39type-lookupresponsespan"><!-- raw HTML omitted -->type LookupResponse<!-- raw HTML omitted --></h3>
+<pre><code>type LookupResponse struct {
+	Node       NodeID
+	Generation uint64
+	EntryValid time.Duration
+	Attr       Attr
+}
+</code></pre>
+<p>LookupResponse是对LookupRequest的响应。</p>
+<h3 id="func-lookupresponse-string">func (*LookupResponse) String</h3>
+<pre><code>func (r *LookupResponse) String() string
+</code></pre>
+<h3 id="span-idpkg-40type-mkdirrequestspan"><!-- raw HTML omitted -->type MkdirRequest<!-- raw HTML omitted --></h3>
+<pre><code>type MkdirRequest struct {
+	Header `json:&quot;-&quot;`
+	Name   string
+	Mode   os.FileMode
+	// Umask of the request.
+	Umask os.FileMode
+}
+</code></pre>
+<p>MkdirRequest请求创建(但不是打开)目录。</p>
+<h3 id="func-mkdirrequest-respond">func (*MkdirRequest) Respond</h3>
+<pre><code>func (r *MkdirRequest) Respond(resp *MkdirResponse)
+</code></pre>
+<p>使用给定的响应响应请求。</p>
+<h3 id="func-mkdirrequest-string">func (*MkdirRequest) String</h3>
+<pre><code>func (r *MkdirRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-41type-mkdirresponsespan"><!-- raw HTML omitted -->type MkdirResponse<!-- raw HTML omitted --></h3>
+<pre><code>type MkdirResponse struct {
+	LookupResponse
+}
+</code></pre>
+<p>MkdirResponse是对MkdirRequest的响应。</p>
+<h3 id="func-mkdirresponse-string">func (*MkdirResponse) String</h3>
+<pre><code>func (r *MkdirResponse) String() string
+</code></pre>
+<h3 id="span-idpkg-42type-mknodrequestspan"><!-- raw HTML omitted -->type MknodRequest<!-- raw HTML omitted --></h3>
+<pre><code>type MknodRequest struct {
+	Header `json:&quot;-&quot;`
+	Name   string
+	Mode   os.FileMode
+	Rdev   uint32
+	// Umask of the request.
+	Umask os.FileMode
+}
+</code></pre>
+<h3 id="func-mknodrequest-respond">func (*MknodRequest) Respond</h3>
+<pre><code>func (r *MknodRequest) Respond(resp *LookupResponse)
+</code></pre>
+<h3 id="func-mknodrequest-string">func (*MknodRequest) String</h3>
+<pre><code>func (r *MknodRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-43type-mountoptionspan"><!-- raw HTML omitted -->type MountOption<!-- raw HTML omitted --></h3>
+<pre><code>type MountOption mountOption
+</code></pre>
+<p>将MountOption传递给Mount以更改挂载的行为。</p>
+<h3 id="span-idpkg-44func-allowdevspan"><!-- raw HTML omitted -->func AllowDev<!-- raw HTML omitted --></h3>
+<pre><code>func AllowDev() MountOption
+</code></pre>
+<p>AllowDev允许解释文件系统上的字符或块特殊设备。</p>
+<h3 id="span-idpkg-45func-allownonemptymount-span"><!-- raw HTML omitted -->func AllowNonEmptyMount <!-- raw HTML omitted --></h3>
+<pre><code>func AllowNonEmptyMount() MountOption
+</code></pre>
+<p>AllowNonEmptyMount允许在非空目录上挂载。</p>
+<p>其中的文件将被新创建的挂载所遮蔽。默认情况下，拒绝这些挂载是为了防止意外掩盖数据，例如防止自动备份。</p>
+<h3 id="span-idpkg-46func-allowotherspan"><!-- raw HTML omitted -->func AllowOther<!-- raw HTML omitted --></h3>
+<pre><code>func AllowOther() MountOption
+</code></pre>
+<p>“AllowOther”允许其他用户访问文件系统。</p>
+<h3 id="span-idpkg-47func-allowsuidspan"><!-- raw HTML omitted -->func AllowSUID<!-- raw HTML omitted --></h3>
+<pre><code>func AllowSUID() MountOption
+</code></pre>
+<p>AllowSUID允许set-user-identifier或set-group-identifier位生效。</p>
+<h3 id="span-idpkg-48func-asyncreadspan"><!-- raw HTML omitted -->func AsyncRead<!-- raw HTML omitted --></h3>
+<pre><code>func AsyncRead() MountOption
+</code></pre>
+<p>AsyncRead为同一个句柄启用多个未处理的读请求。如果没有这个，一次最多只能有一个请求在飞行中。</p>
+<h3 id="span-idpkg-49func-congestionthresholdspan"><!-- raw HTML omitted -->func CongestionThreshold<!-- raw HTML omitted --></h3>
+<pre><code>func CongestionThreshold(n uint16) MountOption
+</code></pre>
+<p>拥塞阈值设置未完成的后台FUSE请求的数量，超过该数量内核认为文件系统拥塞。这可能有助于处理请求延迟。</p>
+<p>在Linux上，这可以通过/sys/fs/fuse/connections/CONN/congestion_threshold动态调整</p>
+<h3 id="span-idpkg-50func-daemontimeout-span"><!-- raw HTML omitted -->func DaemonTimeout <!-- raw HTML omitted --></h3>
+<pre><code>func DaemonTimeout(name string) MountOption
+</code></pre>
+<p>DaemonTimeout设置在声明FUSE挂载死亡之前，请求和应答之间的时间(以秒为单位)。</p>
+<p>FreeBSD。其他人忽略了这个选项。</p>
+<h3 id="span-idpkg-51func-defaultpermissionsspan"><!-- raw HTML omitted -->func DefaultPermissions<!-- raw HTML omitted --></h3>
+<pre><code>func DefaultPermissions() MountOption
+</code></pre>
+<p>DefaultPermissions使内核基于文件模式强制访问控制(如chmod)。</p>
+<p>如果没有这个选项，Node自己决定什么是允许的，什么是不允许的。这通常是可以的，因为没有AllowOther，其他用户无法访问FUSE文件系统。</p>
+<p>FreeBSD忽略此选项。</p>
+<h3 id="span-idpkg-52func-fsnamespan"><!-- raw HTML omitted -->func FSName<!-- raw HTML omitted --></h3>
+<pre><code>func FSName(name string) MountOption
+</code></pre>
+<p>FSName设置在挂载的文件系统列表中可见的文件系统名称(也称为源)。</p>
+<p>FreeBSD忽略此选项。</p>
+<h3 id="span-idpkg-53func-lockingflockspan"><!-- raw HTML omitted -->func LockingFlock<!-- raw HTML omitted --></h3>
+<pre><code>func LockingFlock() MountOption
+</code></pre>
+<p>LockingFlock支持基于flock (BSD)的锁定。这对于具有全局锁定的分布式文件系统非常有用。如果没有这个，内核将自动管理本地锁定。</p>
+<h3 id="span-idpkg-54func-lockingposixspan"><!-- raw HTML omitted -->func LockingPOSIX<!-- raw HTML omitted --></h3>
+<pre><code>func LockingPOSIX() MountOption
+</code></pre>
+<p>LockingPOSIX支持基于flock (BSD)的锁定。这对于具有全局锁定的分布式文件系统非常有用。如果没有这个，内核将自动管理本地锁定。</p>
+<p>要注意，POSIX锁对调用者来说是一个有缺陷的API，具有不直观的行为。</p>
+<h3 id="span-idpkg-55func-maxbackgroundspan"><!-- raw HTML omitted -->func MaxBackground<!-- raw HTML omitted --></h3>
+<pre><code>func MaxBackground(n uint16) MountOption
+</code></pre>
+<p>MaxBackground设置内核将在后台提交的FUSE请求的最大数量。当不需要立即回答时，使用后台请求。这可能有助于处理请求延迟。</p>
+<p>在Linux上，这可以通过/sys/fs/fuse/connections/CONN/max_background动态调整</p>
+<h3 id="span-idpkg-56func-maxreadaheadspan"><!-- raw HTML omitted -->func MaxReadahead<!-- raw HTML omitted --></h3>
+<pre><code>func MaxReadahead(n uint32) MountOption
+</code></pre>
+<p>MaxReadahead设置顺序读取时可以预取的字节数。内核可以强制设置一个比这个更低的最大值。</p>
+<p>这个设置使得内核执行投机性读取，而不是来自任何客户端进程。这通常会极大地提高读性能。</p>
+<h3 id="span-idpkg-57func-readonlyspan"><!-- raw HTML omitted -->func ReadOnly<!-- raw HTML omitted --></h3>
+<pre><code>func ReadOnly() MountOption
+</code></pre>
+<p>ReadOnly使挂载为只读。</p>
+<h3 id="span-idpkg-58func-subtypespan"><!-- raw HTML omitted -->func Subtype<!-- raw HTML omitted --></h3>
+<pre><code>func Subtype(fstype string) MountOption
+</code></pre>
+<p>Subtype设置挂载的子类型。主要类型总是“fuse”。挂载的文件系统列表中的类型看起来像' fuse.foo &lsquo;。</p>
+<p>FreeBSD忽略此选项。</p>
+<h3 id="span-idpkg-59func-writebackcache-span"><!-- raw HTML omitted -->func WritebackCache <!-- raw HTML omitted --></h3>
+<pre><code>func WritebackCache() MountOption
+</code></pre>
+<p>WritebackCache允许内核在将写发送到FUSE服务器之前缓冲写操作。否则，将使用透写缓存。</p>
+<h3 id="span-idpkg-60type-mountpointdoesnotexisterrorspan"><!-- raw HTML omitted -->type MountpointDoesNotExistError<!-- raw HTML omitted --></h3>
+<pre><code>type MountpointDoesNotExistError struct {
+	Path string
+}
+</code></pre>
+<p>MountpointDoesNotExistError是挂载点不存在时返回的错误。</p>
+<h3 id="func-mountpointdoesnotexisterror-error">func (*MountpointDoesNotExistError) Error</h3>
+<pre><code>func (e *MountpointDoesNotExistError) Error() string
+</code></pre>
+<h3 id="span-idpkg-61type-nodeid-span"><!-- raw HTML omitted -->type NodeID <!-- raw HTML omitted --></h3>
+<pre><code>type NodeID uint64
+</code></pre>
+<p>NodeID是标识目录或文件的数字。在LookupResponses中返回的id中，必须是唯一的，而这些id还没有被ForgetRequests遗忘。</p>
+<pre><code>const RootID NodeID = rootID
+</code></pre>
+<p>RootID标识FUSE文件系统的根目录。</p>
+<h3 id="func-nodeid-string">func (NodeID) String</h3>
+<pre><code>func (n NodeID) String() string
+</code></pre>
+<h3 id="span-idpkg-62type-notifyreplyspan"><!-- raw HTML omitted -->type NotifyReply<!-- raw HTML omitted --></h3>
+<pre><code>type NotifyReply struct {
+	Header `json:&quot;-&quot;`
+	// contains filtered or unexported fields
+}
+</code></pre>
+<p>NotifyReply是对较早通知的响应。它的行为类似于Request，但并不是真正的请求，并期望得到响应。</p>
+<h3 id="func-notifyreply-string">func (*NotifyReply) String</h3>
+<pre><code>func (r *NotifyReply) String() string
+</code></pre>
+<h3 id="span-idpkg-63type-notifyretrieval-span"><!-- raw HTML omitted -->type NotifyRetrieval <!-- raw HTML omitted --></h3>
+<pre><code>type NotifyRetrieval struct {
+	// contains filtered or unexported fields
+}
+</code></pre>
+<h3 id="func-notifyretrieval-finish">func (*NotifyRetrieval) Finish</h3>
+<pre><code>func (n *NotifyRetrieval) Finish(r *NotifyReply) []byte
+</code></pre>
+<h3 id="span-idpkg-64type-oldversionerrorspan"><!-- raw HTML omitted -->type OldVersionError<!-- raw HTML omitted --></h3>
+<pre><code>type OldVersionError struct {
+	Kernel     Protocol
+	LibraryMin Protocol
+}
+</code></pre>
+<h3 id="func-oldversionerror-error">func (*OldVersionError) Error</h3>
+<pre><code>func (e *OldVersionError) Error() string
+</code></pre>
+<h3 id="span-idpkg-65type-openflagsspan"><!-- raw HTML omitted -->type OpenFlags<!-- raw HTML omitted --></h3>
+<pre><code>type OpenFlags uint32
+</code></pre>
+<p>OpenFlags是传递给open/create/etc调用的O_FOO标志。例如,操作系统。O_WRONLY | os.O_APPEND。</p>
+<pre><code>const (
+	// Access modes. These are not 1-bit flags, but alternatives where
+	// only one can be chosen. See the IsReadOnly etc convenience
+	// methods.
+	OpenReadOnly  OpenFlags = syscall.O_RDONLY
+	OpenWriteOnly OpenFlags = syscall.O_WRONLY
+	OpenReadWrite OpenFlags = syscall.O_RDWR
+
+	// File was opened in append-only mode, all writes will go to end
+	// of file. FreeBSD does not provide this information.
+	OpenAppend    OpenFlags = syscall.O_APPEND
+	OpenCreate    OpenFlags = syscall.O_CREAT
+	OpenDirectory OpenFlags = syscall.O_DIRECTORY
+	OpenExclusive OpenFlags = syscall.O_EXCL
+	OpenNonblock  OpenFlags = syscall.O_NONBLOCK
+	OpenSync      OpenFlags = syscall.O_SYNC
+	OpenTruncate  OpenFlags = syscall.O_TRUNC
+)
+</code></pre>
+<p>可以在OpenRequest.Flags中看到的标志。</p>
+<pre><code>const OpenAccessModeMask OpenFlags = syscall.O_ACCMODE
+</code></pre>
+<p>OpenAccessModeMask是一个位掩码，它将访问模式与OpenFlags中的其他标志分开。</p>
+<h3 id="func-openflags-isreadonly">func (OpenFlags) IsReadOnly</h3>
+<pre><code>func (fl OpenFlags) IsReadOnly() bool
+</code></pre>
+<p>如果设置了OpenReadOnly则返回true。</p>
+<h3 id="func-openflags-isreadwrite">func (OpenFlags) IsReadWrite</h3>
+<pre><code>func (fl OpenFlags) IsReadWrite() bool
+</code></pre>
+<p>如果设置了OpenReadWrite，则返回true。</p>
+<h3 id="func-openflags-iswriteonly">func (OpenFlags) IsWriteOnly</h3>
+<pre><code>func (fl OpenFlags) IsWriteOnly() bool
+</code></pre>
+<p>如果设置了OpenWriteOnly，则返回true。</p>
+<h3 id="func-openflags-string">func (OpenFlags) String</h3>
+<pre><code>func (fl OpenFlags) String() string
+</code></pre>
+<h3 id="span-idpkg-66type-openrequesspan"><!-- raw HTML omitted -->type OpenReques<!-- raw HTML omitted --></h3>
+<pre><code>type OpenRequest struct {
+	Header `json:&quot;-&quot;`
+	Dir    bool // is this Opendir?
+	Flags  OpenFlags
+}
+</code></pre>
+<p>OpenRequest请求打开文件或目录</p>
+<h3 id="func-openrequest-respond">func (*OpenRequest) Respond</h3>
+<pre><code>func (r *OpenRequest) Respond(resp *OpenResponse)
+</code></pre>
+<p>使用给定的响应响应请求。</p>
+<h3 id="func-openrequest-string">func (*OpenRequest) String</h3>
+<pre><code>func (r *OpenRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-67type-openresponsespan"><!-- raw HTML omitted -->type OpenResponse<!-- raw HTML omitted --></h3>
+<pre><code>type OpenResponse struct {
+	Handle HandleID
+	Flags  OpenResponseFlags
+}
+</code></pre>
+<p>OpenResponse是对OpenRequest的响应。</p>
+<h3 id="func-openresponse-string">func (*OpenResponse) String</h3>
+<pre><code>func (r *OpenResponse) String() string
+</code></pre>
+<h3 id="span-idpkg-68type-openresponseflagsspan"><!-- raw HTML omitted -->type OpenResponseFlags<!-- raw HTML omitted --></h3>
+<pre><code>type OpenResponseFlags uint32
+</code></pre>
+<p>OpenResponseFlags在OpenResponse中返回。</p>
+<pre><code>const (
+	OpenDirectIO    OpenResponseFlags = 1 &lt;&lt; 0 // bypass page cache for this open file
+	OpenKeepCache   OpenResponseFlags = 1 &lt;&lt; 1 // don't invalidate the data cache on open
+	OpenNonSeekable OpenResponseFlags = 1 &lt;&lt; 2 // mark the file as non-seekable (not supported on FreeBSD)
+
+	// Deprecated: Not used, OS X remnant.
+	OpenPurgeAttr OpenResponseFlags = 1 &lt;&lt; 30
+	// Deprecated: Not used, OS X remnant.
+	OpenPurgeUBC OpenResponseFlags = 1 &lt;&lt; 31
+)
+</code></pre>
+<h3 id="func-openresponseflags-string">func (OpenResponseFlags) String</h3>
+<pre><code>func (fl OpenResponseFlags) String() string
+</code></pre>
+<h3 id="span-idpkg-69type-pollevents-span"><!-- raw HTML omitted -->type PollEvents <!-- raw HTML omitted --></h3>
+<pre><code>type PollEvents uint32
+</code></pre>
+<p> </p>
+<pre><code>const (
+	PollIn       PollEvents = 0x0000_0001
+	PollPriority PollEvents = 0x0000_0002
+	PollOut      PollEvents = 0x0000_0004
+	PollError    PollEvents = 0x0000_0008
+	PollHangup   PollEvents = 0x0000_0010
+	// PollInvalid doesn't seem to be used in the FUSE protocol.
+	PollInvalid        PollEvents = 0x0000_0020
+	PollReadNormal     PollEvents = 0x0000_0040
+	PollReadOutOfBand  PollEvents = 0x0000_0080
+	PollWriteNormal    PollEvents = 0x0000_0100
+	PollWriteOutOfBand PollEvents = 0x0000_0200
+	PollMessage        PollEvents = 0x0000_0400
+	PollReadHangup     PollEvents = 0x0000_2000
+
+	DefaultPollMask = PollIn | PollOut | PollReadNormal | PollWriteNormal
+)
+</code></pre>
+<h3 id="func-pollevents-string">func (PollEvents) String</h3>
+<pre><code>func (fl PollEvents) String() string
+</code></pre>
+<h3 id="span-idpkg-70type-pollflagsspan"><!-- raw HTML omitted -->type PollFlags<!-- raw HTML omitted --></h3>
+<pre><code>type PollFlags uint32
+</code></pre>
+<p>PollFlags在PollRequest.Flags中传递</p>
+<pre><code>const (
+	// PollScheduleNotify requests that a poll notification is done
+	// once the node is ready.
+	PollScheduleNotify PollFlags = 1 &lt;&lt; 0
+)
+</code></pre>
+<h3 id="func-pollflags-string">func (PollFlags) String</h3>
+<pre><code>func (fl PollFlags) String() string
+</code></pre>
+<h3 id="span-idpkg-71type-pollrequestspan"><!-- raw HTML omitted -->type PollRequest<!-- raw HTML omitted --></h3>
+<pre><code>type PollRequest struct {
+	Header `json:&quot;-&quot;`
+	Handle HandleID
+
+	Flags PollFlags
+	// Events is a bitmap of events of interest.
+	//
+	// This field is only set for FUSE protocol 7.21 and later.
+	Events PollEvents
+	// contains filtered or unexported fields
+}
+</code></pre>
+<h3 id="func-pollrequest-respond">func (*PollRequest) Respond</h3>
+<pre><code>func (r *PollRequest) Respond(resp *PollResponse)
+</code></pre>
+<h3 id="func-pollrequest-string">func (*PollRequest) String</h3>
+<pre><code>func (r *PollRequest) String() string
+</code></pre>
+<h3 id="func-pollrequest-wakeup">func (*PollRequest) Wakeup</h3>
+<pre><code>func (r *PollRequest) Wakeup() (_ PollWakeup, ok bool)
+</code></pre>
+<p>Wakeup返回的信息可用于在稍后唤醒轮询Handle或Node的文件系统客户端。</p>
+<p>如果本次投票不要求唤醒，Ok为false。</p>
+<p>不要在句柄或节点的生命周期之后保留PollWakeup。</p>
+<h3 id="span-idpkg-72type-pollresponsespan"><!-- raw HTML omitted -->type PollResponse<!-- raw HTML omitted --></h3>
+<pre><code>type PollResponse struct {
+	REvents PollEvents
+}
+</code></pre>
+<h3 id="func-pollresponse-string">func (*PollResponse) String</h3>
+<pre><code>func (r *PollResponse) String() string
+</code></pre>
+<h3 id="span-idpkg-73type-pollwakeupspan"><!-- raw HTML omitted -->type PollWakeup<!-- raw HTML omitted --></h3>
+<pre><code>type PollWakeup struct {
+	// contains filtered or unexported fields
+}
+</code></pre>
+<h3 id="func-pollwakeup-string">func (PollWakeup) String</h3>
+<pre><code>func (p PollWakeup) String() string
+</code></pre>
+<h3 id="span-idpkg-74type-protocol-span"><!-- raw HTML omitted -->type Protocol <!-- raw HTML omitted --></h3>
+<pre><code>type Protocol struct {
+	Major uint32
+	Minor uint32
+}
+</code></pre>
+<p>“Protocol”为FUSE协议版本号。</p>
+<h3 id="func-protocol-ge">func (Protocol) GE</h3>
+<pre><code>func (a Protocol) GE(b Protocol) bool
+</code></pre>
+<p>GE返回a是否大于或等于b。</p>
+<h3 id="func-protocol-lt">func (Protocol) LT</h3>
+<pre><code>func (a Protocol) LT(b Protocol) bool
+</code></pre>
+<p>LT返回a是否小于b。</p>
+<h3 id="func-protocol-string">func (Protocol) String</h3>
+<pre><code>func (p Protocol) String() string
+</code></pre>
+<h3 id="span-idpkg-75type-querylockrequestspan"><!-- raw HTML omitted -->type QueryLockRequest<!-- raw HTML omitted --></h3>
+<pre><code>type QueryLockRequest struct {
+	Header
+	Handle    HandleID
+	LockOwner LockOwner
+	Lock      FileLock
+	LockFlags LockFlags
+}
+</code></pre>
+<p>QueryLockRequest查询锁状态。</p>
+<p>如果可以放置锁，则设置响应锁。unix.F_UNLCK类型。</p>
+<p>如果有冲突锁，响应应该描述其中一个。对于打开文件描述锁，将PID设置为-1。(对于远程方持有的锁，这可能也是合理的行为。)</p>
+<h3 id="func-querylockrequest-respond">func (*QueryLockRequest) Respond</h3>
+<pre><code>func (r *QueryLockRequest) Respond(resp *QueryLockResponse)
+</code></pre>
+<p>使用给定的响应响应请求。</p>
+<h3 id="func-querylockrequest-string">func (*QueryLockRequest) String</h3>
+<pre><code>func (r *QueryLockRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-76type-querylockresponsespan"><!-- raw HTML omitted -->type QueryLockResponse<!-- raw HTML omitted --></h3>
+<pre><code>type QueryLockResponse struct {
+	Lock FileLock
+}
+</code></pre>
+<h3 id="func-querylockresponse-string">func (*QueryLockResponse) String</h3>
+<pre><code>func (r *QueryLockResponse) String() string
+</code></pre>
+<h3 id="span-idpkg-77type-readflagsspan"><!-- raw HTML omitted -->type ReadFlags<!-- raw HTML omitted --></h3>
+<pre><code>type ReadFlags uint32
+</code></pre>
+<p>ReadFlags在ReadRequest中传递。</p>
+<pre><code>const (
+	// LockOwner field is valid.
+	ReadLockOwner ReadFlags = 1 &lt;&lt; 1
+)
+</code></pre>
+<h3 id="func-readflags-string">func (ReadFlags) String</h3>
+<pre><code>func (fl ReadFlags) String() string
+</code></pre>
+<h3 id="span-idpkg-78type-readrequestspan"><!-- raw HTML omitted -->type ReadRequest<!-- raw HTML omitted --></h3>
+<pre><code>type ReadRequest struct {
+	Header    `json:&quot;-&quot;`
+	Dir       bool // is this Readdir?
+	Handle    HandleID
+	Offset    int64
+	Size      int
+	Flags     ReadFlags
+	LockOwner LockOwner
+	FileFlags OpenFlags
+}
+</code></pre>
+<p>ReadRequest请求从打开的文件中读取。</p>
+<h3 id="func-readrequest-respond">func (*ReadRequest) Respond</h3>
+<pre><code>func (r *ReadRequest) Respond(resp *ReadResponse)
+</code></pre>
+<p>使用给定的响应响应请求。</p>
+<h3 id="func-readrequest-string">func (*ReadRequest) String</h3>
+<pre><code>func (r *ReadRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-79type-readresponsespan"><!-- raw HTML omitted -->type ReadResponse<!-- raw HTML omitted --></h3>
+<pre><code>type ReadResponse struct {
+	Data []byte
+}
+</code></pre>
+<p>ReadResponse是对ReadRequest的响应。</p>
+<h3 id="func-readresponse-marshaljson">func (*ReadResponse) MarshalJSON</h3>
+<pre><code>func (r *ReadResponse) MarshalJSON() ([]byte, error)
+</code></pre>
+<h3 id="func-readresponse-string">func (*ReadResponse) String</h3>
+<pre><code>func (r *ReadResponse) String() string
+</code></pre>
+<h3 id="span-idpkg-80type-readlinkrequestspan"><!-- raw HTML omitted -->type ReadlinkRequest<!-- raw HTML omitted --></h3>
+<pre><code>type ReadlinkRequest struct {
+	Header `json:&quot;-&quot;`
+}
+</code></pre>
+<p>ReadlinkRequest是一个读取符号链接目标的请求。</p>
+<h3 id="func-readlinkrequest-respond">func (*ReadlinkRequest) Respond</h3>
+<pre><code>func (r *ReadlinkRequest) Respond(target string)
+</code></pre>
+<h3 id="func-readlinkrequest-string">func (*ReadlinkRequest) String</h3>
+<pre><code>func (r *ReadlinkRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-81type-releaseflags-span"><!-- raw HTML omitted -->type ReleaseFlags <!-- raw HTML omitted --></h3>
+<pre><code>type ReleaseFlags uint32
+</code></pre>
+<p>ReleaseFlags在Release交换中使用。</p>
+<pre><code>const (
+	ReleaseFlush       ReleaseFlags = 1 &lt;&lt; 0
+	ReleaseFlockUnlock ReleaseFlags = 1 &lt;&lt; 1
+)
+</code></pre>
+<h3 id="func-releaseflags-string">func (ReleaseFlags) String</h3>
+<pre><code>func (fl ReleaseFlags) String() string
+</code></pre>
+<h3 id="span-idpkg-82type-releaserequest-span"><!-- raw HTML omitted -->type ReleaseRequest <!-- raw HTML omitted --></h3>
+<pre><code>type ReleaseRequest struct {
+	Header       `json:&quot;-&quot;`
+	Dir          bool // is this Releasedir?
+	Handle       HandleID
+	Flags        OpenFlags // flags from OpenRequest
+	ReleaseFlags ReleaseFlags
+	LockOwner    LockOwner
+}
+</code></pre>
+<p>ReleaseRequest请求释放(关闭)打开的文件句柄。</p>
+<h3 id="func-releaserequest-respond">func (*ReleaseRequest) Respond</h3>
+<pre><code>func (r *ReleaseRequest) Respond()
+</code></pre>
+<p>响应对请求的响应，表明句柄已经被释放。</p>
+<h3 id="func-releaserequest-string">func (*ReleaseRequest) String</h3>
+<pre><code>func (r *ReleaseRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-83type-removerequest-span"><!-- raw HTML omitted -->type RemoveRequest <!-- raw HTML omitted --></h3>
+<pre><code>type RemoveRequest struct {
+	Header `json:&quot;-&quot;`
+	Name   string // name of the entry to remove
+	Dir    bool   // is this rmdir?
+}
+</code></pre>
+<p>RemoveRequest请求从目录r.Node中删除文件或目录。</p>
+<h3 id="func-removerequest-respond">func (*RemoveRequest) Respond</h3>
+<pre><code>func (r *RemoveRequest) Respond()
+</code></pre>
+<p>响应对请求的响应，表明文件已被删除。</p>
+<h3 id="func-removerequest-string">func (*RemoveRequest) String</h3>
+<pre><code>func (r *RemoveRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-84type-removexattrrequestspan"><!-- raw HTML omitted -->type RemovexattrRequest<!-- raw HTML omitted --></h3>
+<pre><code>type RemovexattrRequest struct {
+	Header `json:&quot;-&quot;`
+	Name   string // name of extended attribute
+}
+</code></pre>
+<p>RemovexattrRequest请求删除与r.Node关联的扩展属性。</p>
+<h3 id="func-removexattrrequest-respond">func (*RemovexattrRequest) Respond</h3>
+<pre><code>func (r *RemovexattrRequest) Respond()
+</code></pre>
+<p>响应对请求的响应，指示属性已被删除。</p>
+<h3 id="func-removexattrrequest-string">func (*RemovexattrRequest) String</h3>
+<pre><code>func (r *RemovexattrRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-85type-renamerequestspan"><!-- raw HTML omitted -->type RenameRequest<!-- raw HTML omitted --></h3>
+<pre><code>type RenameRequest struct {
+	Header           `json:&quot;-&quot;`
+	NewDir           NodeID
+	OldName, NewName string
+}
+</code></pre>
+<p>RenameRequest是一个重命名文件的请求。</p>
+<h3 id="func-renamerequest-respond">func (*RenameRequest) Respond</h3>
+<pre><code>func (r *RenameRequest) Respond()
+</code></pre>
+<h3 id="func-renamerequest-string">func (*RenameRequest) String</h3>
+<pre><code>func (r *RenameRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-86type-request-span"><!-- raw HTML omitted -->type Request <!-- raw HTML omitted --></h3>
+<pre><code>type Request interface {
+	// Hdr returns the Header associated with this request.
+	Hdr() *Header
+
+	// RespondError responds to the request with the given error.
+	RespondError(error)
+
+	String() string
+}
+</code></pre>
+<p>Request表示从内核接收到的单个FUSE请求。使用类型开关来确定具体的类型。一个无法识别的类型的请求将有具体的类型*头。</p>
+<h3 id="span-idpkg-87type-requestidspan"><!-- raw HTML omitted -->type RequestID<!-- raw HTML omitted --></h3>
+<pre><code>type RequestID uint64
+</code></pre>
+<p>requesttid标识一个活动的FUSE请求。</p>
+<h3 id="func-requestid-string">func (RequestID) String</h3>
+<pre><code>func (r RequestID) String() string
+</code></pre>
+<h3 id="span-idpkg-88type-setattrrequestspan"><!-- raw HTML omitted -->type SetattrRequest<!-- raw HTML omitted --></h3>
+<pre><code>type SetattrRequest struct {
+	Header `json:&quot;-&quot;`
+	Valid  SetattrValid
+	Handle HandleID
+	Size   uint64
+	Atime  time.Time
+	Mtime  time.Time
+	// Mode is the file mode to set (when valid).
+	//
+	// The type of the node (as in os.ModeType, os.ModeDir etc) is not
+	// guaranteed to be sent by the kernel, in which case
+	// os.ModeIrregular will be set.
+	Mode os.FileMode
+	Uid  uint32
+	Gid  uint32
+
+	// Deprecated: Not used, OS X remnant.
+	Bkuptime time.Time
+	// Deprecated: Not used, OS X remnant.
+	Chgtime time.Time
+	// Deprecated: Not used, OS X remnant.
+	Crtime time.Time
+	// Deprecated: Not used, OS X remnant.
+	Flags uint32
+}
+</code></pre>
+<p>SetattrRequest请求更改与文件关联的一个或多个属性，如Valid所示。</p>
+<h3 id="func-setattrrequest-respond">func (*SetattrRequest) Respond</h3>
+<pre><code>func (r *SetattrRequest) Respond(resp *SetattrResponse)
+</code></pre>
+<p>使用给定的响应响应请求，给出更新的属性。</p>
+<h3 id="func-setattrrequest-string">func (*SetattrRequest) String</h3>
+<pre><code>func (r *SetattrRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-89type-setattrresponsespan"><!-- raw HTML omitted -->type SetattrResponse<!-- raw HTML omitted --></h3>
+<pre><code>type SetattrResponse struct {
+	Attr Attr // file attributes
+}
+</code></pre>
+<p>SetattrResponse是对SetattrRequest的响应。</p>
+<h3 id="func-setattrresponse-string">func (*SetattrResponse) String</h3>
+<pre><code>func (r *SetattrResponse) String() string
+</code></pre>
+<h3 id="span-idpkg-90type-setattrvalid-span"><!-- raw HTML omitted -->type SetattrValid <!-- raw HTML omitted --></h3>
+<pre><code>type SetattrValid uint32
+</code></pre>
+<p>SetattrValid是位标志，描述SetattrRequest中的哪些字段包含在更改中。</p>
+<pre><code>const (
+	SetattrMode      SetattrValid = 1 &lt;&lt; 0
+	SetattrUid       SetattrValid = 1 &lt;&lt; 1
+	SetattrGid       SetattrValid = 1 &lt;&lt; 2
+	SetattrSize      SetattrValid = 1 &lt;&lt; 3
+	SetattrAtime     SetattrValid = 1 &lt;&lt; 4
+	SetattrMtime     SetattrValid = 1 &lt;&lt; 5
+	SetattrHandle    SetattrValid = 1 &lt;&lt; 6
+	SetattrAtimeNow  SetattrValid = 1 &lt;&lt; 7
+	SetattrMtimeNow  SetattrValid = 1 &lt;&lt; 8
+	SetattrLockOwner SetattrValid = 1 &lt;&lt; 9 // http://www.mail-archive.com/git-commits-head@vger.kernel.org/msg27852.html
+
+	// Deprecated: Not used, OS X remnant.
+	SetattrCrtime SetattrValid = 1 &lt;&lt; 28
+	// Deprecated: Not used, OS X remnant.
+	SetattrChgtime SetattrValid = 1 &lt;&lt; 29
+	// Deprecated: Not used, OS X remnant.
+	SetattrBkuptime SetattrValid = 1 &lt;&lt; 30
+	// Deprecated: Not used, OS X remnant.
+	SetattrFlags SetattrValid = 1 &lt;&lt; 31
+)
+</code></pre>
+<h3 id="func-setattrvalid-atime">func (SetattrValid) Atime</h3>
+<pre><code>func (fl SetattrValid) Atime() bool
+</code></pre>
+<h3 id="func-setattrvalid-atimenow">func (SetattrValid) AtimeNow</h3>
+<pre><code>func (fl SetattrValid) AtimeNow() bool
+</code></pre>
+<h3 id="func-setattrvalid-gid">func (SetattrValid) Gid</h3>
+<pre><code>func (fl SetattrValid) Gid() bool
+</code></pre>
+<h3 id="func-setattrvalid-handle">func (SetattrValid) Handle</h3>
+<pre><code>func (fl SetattrValid) Handle() bool
+</code></pre>
+<h3 id="func-setattrvalid-lockowner">func (SetattrValid) LockOwner</h3>
+<pre><code>func (fl SetattrValid) LockOwner() bool
+</code></pre>
+<h3 id="func-setattrvalid-mode">func (SetattrValid) Mode</h3>
+<pre><code>func (fl SetattrValid) Mode() bool
+</code></pre>
+<h3 id="func-setattrvalid-mtime">func (SetattrValid) Mtime</h3>
+<pre><code>func (fl SetattrValid) Mtime() bool
+</code></pre>
+<h3 id="func-setattrvalid-mtimenow">func (SetattrValid) MtimeNow</h3>
+<pre><code>func (fl SetattrValid) MtimeNow() bool
+</code></pre>
+<h3 id="func-setattrvalid-size">func (SetattrValid) Size</h3>
+<pre><code>func (fl SetattrValid) Size() bool
+</code></pre>
+<h3 id="func-setattrvalid-string">func (SetattrValid) String</h3>
+<pre><code>func (fl SetattrValid) String() string
+</code></pre>
+<h3 id="func-setattrvalid-uid">func (SetattrValid) Uid</h3>
+<pre><code>func (fl SetattrValid) Uid() bool
+</code></pre>
+<h3 id="span-idpkg-91type-setxattrrequestspan"><!-- raw HTML omitted -->type SetxattrRequest<!-- raw HTML omitted --></h3>
+<pre><code>type SetxattrRequest struct {
+	Header `json:&quot;-&quot;`
+
+	// Flags can make the request fail if attribute does/not already
+	// exist. Unfortunately, the constants are platform-specific and
+	// not exposed by Go1.2. Look for XATTR_CREATE, XATTR_REPLACE.
+	//
+	// TODO improve this later
+	//
+	// TODO XATTR_CREATE and exist -&gt; EEXIST
+	//
+	// TODO XATTR_REPLACE and not exist -&gt; ENODATA
+	Flags uint32
+
+	// Deprecated: Not used, OS X remnant.
+	Position uint32
+
+	Name  string
+	Xattr []byte
+}
+</code></pre>
+<p>SetxattrRequest请求设置与文件关联的扩展属性。</p>
+<h3 id="func-setxattrrequest-respond">func (*SetxattrRequest) Respond</h3>
+<pre><code>func (r *SetxattrRequest) Respond()
+</code></pre>
+<p>响应对请求的响应，指示已设置扩展属性。</p>
+<h3 id="func-setxattrrequest-string">func (*SetxattrRequest) String</h3>
+<pre><code>func (r *SetxattrRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-92type-statfsrequestspan"><!-- raw HTML omitted -->type StatfsRequest<!-- raw HTML omitted --></h3>
+<pre><code>type StatfsRequest struct {
+	Header `json:&quot;-&quot;`
+}
+</code></pre>
+<p>StatfsRequest请求关于挂载的文件系统的信息。</p>
+<h3 id="func-statfsrequest-respond">func (*StatfsRequest) Respond</h3>
+<pre><code>func (r *StatfsRequest) Respond(resp *StatfsResponse)
+</code></pre>
+<p>使用给定的响应响应请求。</p>
+<h3 id="func-statfsrequest-string">func (*StatfsRequest) String</h3>
+<pre><code>func (r *StatfsRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-93type-statfsresponsespan"><!-- raw HTML omitted -->type StatfsResponse<!-- raw HTML omitted --></h3>
+<pre><code>type StatfsResponse struct {
+	Blocks  uint64 // Total data blocks in file system.
+	Bfree   uint64 // Free blocks in file system.
+	Bavail  uint64 // Free blocks in file system if you're not root.
+	Files   uint64 // Total files in file system.
+	Ffree   uint64 // Free files in file system.
+	Bsize   uint32 // Block size
+	Namelen uint32 // Maximum file name length?
+	Frsize  uint32 // Fragment size, smallest addressable data size in the file system.
+}
+</code></pre>
+<p>StatfsResponse是对StatfsRequest的响应。</p>
+<h3 id="func-statfsresponse-string">func (*StatfsResponse) String</h3>
+<pre><code>func (r *StatfsResponse) String() string
+</code></pre>
+<h3 id="span-idpkg-94type-symlinkrequestspan"><!-- raw HTML omitted -->type SymlinkRequest<!-- raw HTML omitted --></h3>
+<pre><code>type SymlinkRequest struct {
+	Header          `json:&quot;-&quot;`
+	NewName, Target string
+}
+</code></pre>
+<p>SymlinkRequest是创建一个使NewName指向Target的符号链接的请求。</p>
+<h3 id="func-symlinkrequest-respond">func (*SymlinkRequest) Respond</h3>
+<pre><code>func (r *SymlinkRequest) Respond(resp *SymlinkResponse)
+</code></pre>
+<p>响应对请求的响应，指示创建了符号链接。</p>
+<h3 id="func-symlinkrequest-string">func (*SymlinkRequest) String</h3>
+<pre><code>func (r *SymlinkRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-95type-symlinkresponsespan"><!-- raw HTML omitted -->type SymlinkResponse<!-- raw HTML omitted --></h3>
+<pre><code>type SymlinkResponse struct {
+	LookupResponse
+}
+</code></pre>
+<p>一个SymlinkResponse是对一个SymlinkRequest的响应。</p>
+<h3 id="func-symlinkresponse-string">func (*SymlinkResponse) String</h3>
+<pre><code>func (r *SymlinkResponse) String() string
+</code></pre>
+<h3 id="span-idpkg-96type-unlockrequestspan"><!-- raw HTML omitted -->type UnlockRequest<!-- raw HTML omitted --></h3>
+<pre><code>type UnlockRequest LockRequest
+</code></pre>
+<p>UnlockRequest请求释放节点上一个字节范围上的锁。</p>
+<p>UnlockRequests总是有Lock。= = LockUnlock类型。</p>
+<p>看到LockRequest。UnlockRequest可以转换为LockRequest。</p>
+<h3 id="func-unlockrequest-respond">func (*UnlockRequest) Respond</h3>
+<pre><code>func (r *UnlockRequest) Respond()
+</code></pre>
+<h3 id="func-unlockrequest-string">func (*UnlockRequest) String</h3>
+<pre><code>func (r *UnlockRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-97type-unrecognizedrequestspan"><!-- raw HTML omitted -->type UnrecognizedRequest<!-- raw HTML omitted --></h3>
+<pre><code>type UnrecognizedRequest struct {
+	Header `json:&quot;-&quot;`
+	Opcode uint32
+}
+</code></pre>
+<h3 id="func-unrecognizedrequest-string">func (*UnrecognizedRequest) String</h3>
+<pre><code>func (r *UnrecognizedRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-98type-writeflagsspan"><!-- raw HTML omitted -->type WriteFlags<!-- raw HTML omitted --></h3>
+<pre><code>type WriteFlags uint32
+</code></pre>
+<p>WriteFlags在WriteRequest中传递。</p>
+<pre><code>const (
+	WriteCache WriteFlags = 1 &lt;&lt; 0
+	// LockOwner field is valid.
+	WriteLockOwner WriteFlags = 1 &lt;&lt; 1
+)
+</code></pre>
+<h3 id="func-writeflags-string">func (WriteFlags) String</h3>
+<pre><code>func (fl WriteFlags) String() string
+</code></pre>
+<h3 id="span-idpkg-99type-writerequest-span"><!-- raw HTML omitted -->type WriteRequest <!-- raw HTML omitted --></h3>
+<pre><code>type WriteRequest struct {
+	Header
+	Handle    HandleID
+	Offset    int64
+	Data      []byte
+	Flags     WriteFlags
+	LockOwner LockOwner
+	FileFlags OpenFlags
+}
+</code></pre>
+<p>WriteRequest请求写入打开的文件。</p>
+<h3 id="func-writerequest-marshaljson">func (*WriteRequest) MarshalJSON</h3>
+<pre><code>func (r *WriteRequest) MarshalJSON() ([]byte, error)
+</code></pre>
+<h3 id="func-writerequest-respond">func (*WriteRequest) Respond</h3>
+<pre><code>func (r *WriteRequest) Respond(resp *WriteResponse)
+</code></pre>
+<p>使用给定的响应响应请求。</p>
+<h3 id="func-writerequest-string">func (*WriteRequest) String</h3>
+<pre><code>func (r *WriteRequest) String() string
+</code></pre>
+<h3 id="span-idpkg-100type-writeresponsespan"><!-- raw HTML omitted -->type WriteResponse<!-- raw HTML omitted --></h3>
+<pre><code>type WriteResponse struct {
+	Size int
+}
+</code></pre>
+<p>WriteResponse响应写操作，指示写了多少字节。</p>
+<h3 id="func-writeresponse-string">func (*WriteResponse) String</h3>
+<pre><code>func (r *WriteResponse) String() string
+</code></pre></article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+ 
+ 
+ 
+ window.onload = function () {
+   const header = document.getElementById('post-header');
+   const headerHeight = header.offsetHeight;
+   
+   document.documentElement.style.scrollPaddingTop = headerHeight + 10 + "px";
+ }
+
+ const tocToggleButton = document.getElementById("toc-toggle");
+
+ const tippyInstance = tippy('#toc-toggle', {
+  trigger: 'click',
+  content: '<div id="table-of-contents">\u003cnav id=\u0022TableOfContents\u0022\u003e\n  \u003cul\u003e\n    \u003cli\u003e\u003ca href=\u0022#bazilorgfuse----filesystems-in-go\u0022\u003ebazil.org\/fuse \u0026ndash; Filesystems in Go\u003c\/a\u003e\u003c\/li\u003e\n    \u003cli\u003e\u003ca href=\u0022#文档\u0022\u003e文档\u003c\/a\u003e\n      \u003cul\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idservice1-nameservice1服务方法span\u0022\u003e\u003c!-- raw HTML omitted --\u003e服务方法\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idservice2-nameservice2错误span\u0022\u003e\u003c!-- raw HTML omitted --\u003e错误\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idservice3-nameservice3中断操作span\u0022\u003e\u003c!-- raw HTML omitted --\u003e中断操作\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idservice4-nameservice4身份验证span\u0022\u003e\u003c!-- raw HTML omitted --\u003e身份验证\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idservice5-nameservice5挂载操作span\u0022\u003e\u003c!-- raw HTML omitted --\u003e挂载操作\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#索引\u0022\u003e索引\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-1constantsspan\u0022\u003e\u003c!-- raw HTML omitted --\u003eConstants\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-2variablesspan\u0022\u003e\u003c!-- raw HTML omitted --\u003eVariables\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#functions\u0022\u003eFunctions\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-3func-appenddirentspan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc AppendDirent\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-4func-unmountspan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc Unmount\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#types\u0022\u003eTypes\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-5type-accessrequest-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype AccessRequest \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-accessrequest-respond\u0022\u003efunc (*AccessRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-accessrequest-string\u0022\u003efunc (*AccessRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-6type-attrspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype Attr\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-attr-string\u0022\u003efunc (Attr) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-7type-batchforgetitemspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype BatchForgetItem\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-8type-batchforgetrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype BatchForgetRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-batchforgetrequest-respond\u0022\u003efunc (*BatchForgetRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-batchforgetrequest-string\u0022\u003efunc (*BatchForgetRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-9type-connspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype Conn\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-mount\u0022\u003efunc Mount\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-conn-close\u0022\u003efunc (*Conn) Close\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-conn-features\u0022\u003efunc (*Conn) Features\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-conn-invalidateentry\u0022\u003efunc (*Conn) InvalidateEntry\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-conn-invalidatenode\u0022\u003efunc (*Conn) InvalidateNode\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-conn-notifypollwakeup\u0022\u003efunc (*Conn) NotifyPollWakeup\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-conn-notifyretrieve\u0022\u003efunc (*Conn) NotifyRetrieve\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-conn-notifystore\u0022\u003efunc (*Conn) NotifyStore\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-conn-protocol\u0022\u003efunc (*Conn) Protocol\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-conn-readrequest\u0022\u003efunc (*Conn) ReadRequest\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-10type-createrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype CreateRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-createrequest-respond\u0022\u003efunc (*CreateRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-createrequest-string\u0022\u003efunc (*CreateRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-11type-createresponsespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype CreateResponse\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-createresponse-string\u0022\u003efunc (*CreateResponse) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-12type-destroyrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype DestroyRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-destroyrequest-respond\u0022\u003efunc (*DestroyRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-destroyrequest-string\u0022\u003efunc (*DestroyRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-13type-direntspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype Dirent\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-14type-direnttypespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype DirentType\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-direnttype-string\u0022\u003efunc (DirentType) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-15type-errnospan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype Errno\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-toerrno\u0022\u003efunc ToErrno\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-errno-errno\u0022\u003efunc (Errno) Errno\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-errno-errnoname\u0022\u003efunc (Errno) ErrnoName\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-errno-error\u0022\u003efunc (Errno) Error\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-errno-marshaltext\u0022\u003efunc (Errno) MarshalText\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-errno-string\u0022\u003efunc (Errno) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-16type-errornumberspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype ErrorNumber\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-17type-filelockspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype FileLock\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-18type-flushrequest-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype FlushRequest \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-flushrequest-respond\u0022\u003efunc (*FlushRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-flushrequest-string\u0022\u003efunc (*FlushRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-19type-forgetrequest-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype ForgetRequest \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-forgetrequest-respond\u0022\u003efunc (*ForgetRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-forgetrequest-string\u0022\u003efunc (*ForgetRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-20type-fsyncrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype FsyncRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-fsyncrequest-respond\u0022\u003efunc (*FsyncRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-fsyncrequest-string\u0022\u003efunc (*FsyncRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-21type-getattrflagsspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype GetattrFlags\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-getattrflags-string\u0022\u003efunc (GetattrFlags) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-22type-getattrrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype GetattrRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-getattrrequest-respond\u0022\u003efunc (*GetattrRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-getattrrequest-string\u0022\u003efunc (*GetattrRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-23type-getattrresponsespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype GetattrResponse\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-getattrresponse-string\u0022\u003efunc (*GetattrResponse) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-24type-getxattrrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype GetxattrRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-getxattrrequest-respond\u0022\u003efunc (*GetxattrRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-getxattrrequest-string\u0022\u003efunc (*GetxattrRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-25type-getxattrresponse-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype GetxattrResponse \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-getxattrresponse-string\u0022\u003efunc (*GetxattrResponse) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-26type-handleidspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype HandleID\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-handleid-string\u0022\u003efunc (HandleID) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-27type-headerspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype Header\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-header-hdr\u0022\u003efunc (*Header) Hdr\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-header-responderror\u0022\u003efunc (*Header) RespondError\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-header-string\u0022\u003efunc (*Header) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-28type-initflagsspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype InitFlags\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-initflags-string\u0022\u003efunc (InitFlags) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-29type-interruptrequest-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype InterruptRequest \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-interruptrequest-respond\u0022\u003efunc (*InterruptRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-interruptrequest-string\u0022\u003efunc (*InterruptRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-30type-linkrequest-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype LinkRequest \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-linkrequest-respond\u0022\u003efunc (*LinkRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-linkrequest-string\u0022\u003efunc (*LinkRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-31type-listxattrrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype ListxattrRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-listxattrrequest-respond\u0022\u003efunc (*ListxattrRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-listxattrrequest-string\u0022\u003efunc (*ListxattrRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-32type-listxattrresponsespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype ListxattrResponse\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-listxattrresponse-append\u0022\u003efunc (*ListxattrResponse) Append\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-listxattrresponse-string\u0022\u003efunc (*ListxattrResponse) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-33type-lockflagsspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype LockFlags\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-lockflags-string\u0022\u003efunc (LockFlags) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-34type-lockownerspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype LockOwner\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-lockowner-string\u0022\u003efunc (LockOwner) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-35type-lockrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype LockRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-lockrequest-respond\u0022\u003efunc (*LockRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-lockrequest-string\u0022\u003efunc (*LockRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-36type-locktypespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype LockType\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-locktype-string\u0022\u003efunc (LockType) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-37type-lockwaitrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype LockWaitRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-lockwaitrequest-respond\u0022\u003efunc (*LockWaitRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-lockwaitrequest-string\u0022\u003efunc (*LockWaitRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-38type-lookuprequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype LookupRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-lookuprequest-respond\u0022\u003efunc (*LookupRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-lookuprequest-string\u0022\u003efunc (*LookupRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-39type-lookupresponsespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype LookupResponse\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-lookupresponse-string\u0022\u003efunc (*LookupResponse) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-40type-mkdirrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype MkdirRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-mkdirrequest-respond\u0022\u003efunc (*MkdirRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-mkdirrequest-string\u0022\u003efunc (*MkdirRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-41type-mkdirresponsespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype MkdirResponse\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-mkdirresponse-string\u0022\u003efunc (*MkdirResponse) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-42type-mknodrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype MknodRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-mknodrequest-respond\u0022\u003efunc (*MknodRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-mknodrequest-string\u0022\u003efunc (*MknodRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-43type-mountoptionspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype MountOption\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-44func-allowdevspan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc AllowDev\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-45func-allownonemptymount-span\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc AllowNonEmptyMount \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-46func-allowotherspan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc AllowOther\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-47func-allowsuidspan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc AllowSUID\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-48func-asyncreadspan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc AsyncRead\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-49func-congestionthresholdspan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc CongestionThreshold\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-50func-daemontimeout-span\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc DaemonTimeout \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-51func-defaultpermissionsspan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc DefaultPermissions\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-52func-fsnamespan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc FSName\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-53func-lockingflockspan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc LockingFlock\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-54func-lockingposixspan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc LockingPOSIX\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-55func-maxbackgroundspan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc MaxBackground\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-56func-maxreadaheadspan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc MaxReadahead\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-57func-readonlyspan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc ReadOnly\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-58func-subtypespan\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc Subtype\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-59func-writebackcache-span\u0022\u003e\u003c!-- raw HTML omitted --\u003efunc WritebackCache \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-60type-mountpointdoesnotexisterrorspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype MountpointDoesNotExistError\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-mountpointdoesnotexisterror-error\u0022\u003efunc (*MountpointDoesNotExistError) Error\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-61type-nodeid-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype NodeID \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-nodeid-string\u0022\u003efunc (NodeID) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-62type-notifyreplyspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype NotifyReply\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-notifyreply-string\u0022\u003efunc (*NotifyReply) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-63type-notifyretrieval-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype NotifyRetrieval \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-notifyretrieval-finish\u0022\u003efunc (*NotifyRetrieval) Finish\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-64type-oldversionerrorspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype OldVersionError\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-oldversionerror-error\u0022\u003efunc (*OldVersionError) Error\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-65type-openflagsspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype OpenFlags\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-openflags-isreadonly\u0022\u003efunc (OpenFlags) IsReadOnly\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-openflags-isreadwrite\u0022\u003efunc (OpenFlags) IsReadWrite\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-openflags-iswriteonly\u0022\u003efunc (OpenFlags) IsWriteOnly\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-openflags-string\u0022\u003efunc (OpenFlags) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-66type-openrequesspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype OpenReques\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-openrequest-respond\u0022\u003efunc (*OpenRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-openrequest-string\u0022\u003efunc (*OpenRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-67type-openresponsespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype OpenResponse\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-openresponse-string\u0022\u003efunc (*OpenResponse) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-68type-openresponseflagsspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype OpenResponseFlags\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-openresponseflags-string\u0022\u003efunc (OpenResponseFlags) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-69type-pollevents-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype PollEvents \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-pollevents-string\u0022\u003efunc (PollEvents) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-70type-pollflagsspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype PollFlags\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-pollflags-string\u0022\u003efunc (PollFlags) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-71type-pollrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype PollRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-pollrequest-respond\u0022\u003efunc (*PollRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-pollrequest-string\u0022\u003efunc (*PollRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-pollrequest-wakeup\u0022\u003efunc (*PollRequest) Wakeup\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-72type-pollresponsespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype PollResponse\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-pollresponse-string\u0022\u003efunc (*PollResponse) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-73type-pollwakeupspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype PollWakeup\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-pollwakeup-string\u0022\u003efunc (PollWakeup) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-74type-protocol-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype Protocol \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-protocol-ge\u0022\u003efunc (Protocol) GE\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-protocol-lt\u0022\u003efunc (Protocol) LT\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-protocol-string\u0022\u003efunc (Protocol) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-75type-querylockrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype QueryLockRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-querylockrequest-respond\u0022\u003efunc (*QueryLockRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-querylockrequest-string\u0022\u003efunc (*QueryLockRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-76type-querylockresponsespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype QueryLockResponse\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-querylockresponse-string\u0022\u003efunc (*QueryLockResponse) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-77type-readflagsspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype ReadFlags\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-readflags-string\u0022\u003efunc (ReadFlags) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-78type-readrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype ReadRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-readrequest-respond\u0022\u003efunc (*ReadRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-readrequest-string\u0022\u003efunc (*ReadRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-79type-readresponsespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype ReadResponse\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-readresponse-marshaljson\u0022\u003efunc (*ReadResponse) MarshalJSON\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-readresponse-string\u0022\u003efunc (*ReadResponse) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-80type-readlinkrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype ReadlinkRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-readlinkrequest-respond\u0022\u003efunc (*ReadlinkRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-readlinkrequest-string\u0022\u003efunc (*ReadlinkRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-81type-releaseflags-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype ReleaseFlags \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-releaseflags-string\u0022\u003efunc (ReleaseFlags) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-82type-releaserequest-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype ReleaseRequest \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-releaserequest-respond\u0022\u003efunc (*ReleaseRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-releaserequest-string\u0022\u003efunc (*ReleaseRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-83type-removerequest-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype RemoveRequest \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-removerequest-respond\u0022\u003efunc (*RemoveRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-removerequest-string\u0022\u003efunc (*RemoveRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-84type-removexattrrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype RemovexattrRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-removexattrrequest-respond\u0022\u003efunc (*RemovexattrRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-removexattrrequest-string\u0022\u003efunc (*RemovexattrRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-85type-renamerequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype RenameRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-renamerequest-respond\u0022\u003efunc (*RenameRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-renamerequest-string\u0022\u003efunc (*RenameRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-86type-request-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype Request \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-87type-requestidspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype RequestID\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-requestid-string\u0022\u003efunc (RequestID) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-88type-setattrrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype SetattrRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setattrrequest-respond\u0022\u003efunc (*SetattrRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setattrrequest-string\u0022\u003efunc (*SetattrRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-89type-setattrresponsespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype SetattrResponse\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setattrresponse-string\u0022\u003efunc (*SetattrResponse) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-90type-setattrvalid-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype SetattrValid \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setattrvalid-atime\u0022\u003efunc (SetattrValid) Atime\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setattrvalid-atimenow\u0022\u003efunc (SetattrValid) AtimeNow\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setattrvalid-gid\u0022\u003efunc (SetattrValid) Gid\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setattrvalid-handle\u0022\u003efunc (SetattrValid) Handle\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setattrvalid-lockowner\u0022\u003efunc (SetattrValid) LockOwner\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setattrvalid-mode\u0022\u003efunc (SetattrValid) Mode\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setattrvalid-mtime\u0022\u003efunc (SetattrValid) Mtime\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setattrvalid-mtimenow\u0022\u003efunc (SetattrValid) MtimeNow\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setattrvalid-size\u0022\u003efunc (SetattrValid) Size\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setattrvalid-string\u0022\u003efunc (SetattrValid) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setattrvalid-uid\u0022\u003efunc (SetattrValid) Uid\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-91type-setxattrrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype SetxattrRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setxattrrequest-respond\u0022\u003efunc (*SetxattrRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-setxattrrequest-string\u0022\u003efunc (*SetxattrRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-92type-statfsrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype StatfsRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-statfsrequest-respond\u0022\u003efunc (*StatfsRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-statfsrequest-string\u0022\u003efunc (*StatfsRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-93type-statfsresponsespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype StatfsResponse\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-statfsresponse-string\u0022\u003efunc (*StatfsResponse) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-94type-symlinkrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype SymlinkRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-symlinkrequest-respond\u0022\u003efunc (*SymlinkRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-symlinkrequest-string\u0022\u003efunc (*SymlinkRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-95type-symlinkresponsespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype SymlinkResponse\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-symlinkresponse-string\u0022\u003efunc (*SymlinkResponse) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-96type-unlockrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype UnlockRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-unlockrequest-respond\u0022\u003efunc (*UnlockRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-unlockrequest-string\u0022\u003efunc (*UnlockRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-97type-unrecognizedrequestspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype UnrecognizedRequest\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-unrecognizedrequest-string\u0022\u003efunc (*UnrecognizedRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-98type-writeflagsspan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype WriteFlags\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-writeflags-string\u0022\u003efunc (WriteFlags) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-99type-writerequest-span\u0022\u003e\u003c!-- raw HTML omitted --\u003etype WriteRequest \u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-writerequest-marshaljson\u0022\u003efunc (*WriteRequest) MarshalJSON\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-writerequest-respond\u0022\u003efunc (*WriteRequest) Respond\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-writerequest-string\u0022\u003efunc (*WriteRequest) String\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#span-idpkg-100type-writeresponsespan\u0022\u003e\u003c!-- raw HTML omitted --\u003etype WriteResponse\u003c!-- raw HTML omitted --\u003e\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-writeresponse-string\u0022\u003efunc (*WriteResponse) String\u003c\/a\u003e\u003c\/li\u003e\n      \u003c\/ul\u003e\n    \u003c\/li\u003e\n  \u003c\/ul\u003e\n\u003c\/nav\u003e</div>',
+  allowHTML: true,
+  placement: 'bottom-start',
+  interactive: true,
+  arrow: false,
+  maxWidth: "none",
+  onHide: function () { tocToggleButton.classList.remove("hover"); },
+  onShow: function () { tocToggleButton.classList.add("hover"); },
+  onShown: function () {
+    selectTableOfContentsOption();
+
+    if (window.hasSetupTableOfContentsListeners) {
+      return;
+    }
+
+    const tableOfContents = document.getElementById("table-of-contents");
+    tableOfContents.addEventListener('click', function () {
+      
+      tippyInstance[0].hide();
+    });
+
+    window.hasSetupTableOfContentsListeners = true;
+  }
+ });
+
+ function selectTableOfContentsOption () {
+   const optionSelectedClass = 'table-of-contents-option-selected';
+
+   const tableOfContentsOptions = document.querySelectorAll("#table-of-contents > nav > ul li");
+
+   for (const option of tableOfContentsOptions) {
+     
+
+     const [child] = option.children;
+     if (child.tagName.toLowerCase() !== 'a') {
+       continue;
+     }
+
+     if (window.location.href === child.href) {
+       child.classList.add(optionSelectedClass);
+     } else {
+       child.classList.remove(optionSelectedClass);
+     }
+   }
+ }
+
+ window.onhashchange = selectTableOfContentsOption;
+</script>
+
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://topcoder520.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+</body>
+
+<script type="application/javascript" src="https://topcoder520.github.io/js/github-style.js"></script>
+
+
+
+</html>

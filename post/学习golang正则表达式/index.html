@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://topcoder520.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://topcoder520.github.io/css/syntax.css' />
+    <title>学习golang正则表达式 - HuangJing&#39;s blog</title>
+    
+    <link rel="icon" type="image/x-icon" href='/images/github.png'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    <meta name="description"
+  content="golang的正则表达式" />
+<meta name="keywords"
+  content='blog, google analytics' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://topcoder520.github.io/post/%E5%AD%A6%E4%B9%A0golang%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="学习golang正则表达式 - HuangJing&#39;s blog" />
+<meta name="twitter:description"
+  content="golang的正则表达式" />
+<meta name="twitter:site" content="https://topcoder520.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://topcoder520.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="学习golang正则表达式 - HuangJing&#39;s blog">
+<meta property="og:description"
+  content="golang的正则表达式" />
+<meta property="og:url" content="https://topcoder520.github.io/post/%E5%AD%A6%E4%B9%A0golang%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" />
+<meta property="og:site_name" content="学习golang正则表达式" />
+<meta property="og:image"
+  content="https://topcoder520.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2021-08-02 21:23:41 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://topcoder520.github.io/">
+        <svg class="octicon" height="32" viewBox="0 0 16 16" version="1.1" width="32">
+          <path fill-rule="evenodd"
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+          </path>
+        </svg>
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd"
+            d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          <form target="_blank" action="https://github.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://topcoder520.github.io/">
+            </label>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://topcoder520.github.io/">
+        <svg class="octicon octicon-mark-github v-align-middle" height="32" viewBox="0 0 16 16" version="1.1"
+          width="32">
+          <path fill-rule="evenodd"
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+          </path>
+        </svg>
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+  
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+<div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://topcoder520.github.io/">
+                  <img class=" avatar-user"
+                    src="https://avatars.githubusercontent.com/u/38901719?v=4"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://topcoder520.github.io/">HuangJing</a></span><span
+                    class="path-divider">/</span><strong class="css-truncate-target mr-1" style="max-width: 410px"><a
+                      href="https://topcoder520.github.io/post/%E5%AD%A6%E4%B9%A0golang%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">学习golang正则表达式</a></strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Mon, 02 Aug 2021 21:23:41 &#43;0800"
+                    class="no-wrap">
+                    Mon, 02 Aug 2021 21:23:41 &#43;0800</relative-time>
+
+                  
+                  <span class="file-info-divider"></span>
+                  Modified <relative-time datetime="Mon, 02 Aug 2021 22:24:58 &#43;0800"
+                    class="no-wrap">
+                    Mon, 02 Aug 2021 22:24:58 &#43;0800</relative-time>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" class="btn btn-octicon m-0 mr-2 p-2" aria-haspopup="menu" aria-label="Table of Contents" role="button">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                          9267 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                    
+                    <a class="muted-link mr-3" href="/tags/go">
+                      <svg class="octicon octicon-tag" viewBox="0 0 16 16" version="1.1" width="16" height="16">
+                        <path fill-rule="evenodd"
+                          d="M2.5 7.775V2.75a.25.25 0 01.25-.25h5.025a.25.25 0 01.177.073l6.25 6.25a.25.25 0 010 .354l-5.025 5.025a.25.25 0 01-.354 0l-6.25-6.25a.25.25 0 01-.073-.177zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 010 2.474l-5.026 5.026a1.75 1.75 0 01-2.474 0l-6.25-6.25A1.75 1.75 0 011 7.775zM6 5a1 1 0 100 2 1 1 0 000-2z">
+                        </path>
+                      </svg>
+                      go
+                    </a>
+                    
+                    <a class="muted-link mr-3" href="/tags/regexp">
+                      <svg class="octicon octicon-tag" viewBox="0 0 16 16" version="1.1" width="16" height="16">
+                        <path fill-rule="evenodd"
+                          d="M2.5 7.775V2.75a.25.25 0 01.25-.25h5.025a.25.25 0 01.177.073l6.25 6.25a.25.25 0 010 .354l-5.025 5.025a.25.25 0 01-.354 0l-6.25-6.25a.25.25 0 01-.073-.177zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 010 2.474l-5.026 5.026a1.75 1.75 0 01-2.474 0l-6.25-6.25A1.75 1.75 0 011 7.775zM6 5a1 1 0 100 2 1 1 0 000-2z">
+                        </path>
+                      </svg>
+                      regexp
+                    </a>
+                    
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5">
+                <article class="markdown-body entry-content container-lg"><h1 id="golang的正则表达式">golang的正则表达式</h1>
+<p>原文：<!-- raw HTML omitted --><a href="https://studygolang.com/pkgdoc">https://studygolang.com/pkgdoc</a><!-- raw HTML omitted --></p>
+<p>导入的包</p>
+<pre><code>import &quot;regexp&quot;
+</code></pre>
+<p><em>正则表达式采用RE2语法（除了\c、\C）</em><br>
+参见[<!-- raw HTML omitted -->http://code.google.com/p/re2/wiki/Syntax<!-- raw HTML omitted -->]。</p>
+<h2 id="syntax语法">Syntax语法</h2>
+<p>单字符：</p>
+<pre><code>      .            任意字符（标志s==true时还包括换行符）
+    [xyz]          字符族
+    [^xyz]         反向字符族
+    \d             Perl预定义字符族
+    \D             反向Perl预定义字符族
+    [:alpha:]      ASCII字符族
+    [:^alpha:]     反向ASCII字符族
+    \pN            Unicode字符族（单字符名），参见unicode包
+    \PN            反向Unicode字符族（单字符名）
+    \p{Greek}      Unicode字符族（完整字符名）
+    \P{Greek}      反向Unicode字符族（完整字符名） 
+</code></pre>
+<p>结合：</p>
+<pre><code>    xy             匹配x后接着匹配y
+	x|y            匹配x或y（优先匹配x）
+</code></pre>
+<p>重复：</p>
+<pre><code>    x*             重复&gt;=0次匹配x，越多越好（优先重复匹配x）
+    x+             重复&gt;=1次匹配x，越多越好（优先重复匹配x）
+    x?             0或1次匹配x，优先1次
+    x{n,m}         n到m次匹配x，越多越好（优先重复匹配x）
+    x{n,}          重复&gt;=n次匹配x，越多越好（优先重复匹配x）
+    x{n}           重复n次匹配x
+    x*?            重复&gt;=0次匹配x，越少越好（优先跳出重复）
+    x+?            重复&gt;=1次匹配x，越少越好（优先跳出重复）
+    x??            0或1次匹配x，优先0次
+    x{n,m}?        n到m次匹配x，越少越好（优先跳出重复）
+    x{n,}?         重复&gt;=n次匹配x，越少越好（优先跳出重复）
+    x{n}?          重复n次匹配x
+</code></pre>
+<p>实现的限制：计数格式x{n}等（不包括x*等格式）中n最大值1000。负数或者显式出现的过大的值会导致解析错误，返回ErrInvalidRepeatSize。</p>
+<p>分组：</p>
+<pre><code>    (re)           编号的捕获分组
+    (?P&lt;name&gt;re)   命名并编号的捕获分组
+    (?:re)         不捕获的分组
+    (?flags)       设置当前所在分组的标志，不捕获也不匹配
+    (?flags:re)    设置re段的标志，不捕获的分组
+</code></pre>
+<p>标志的语法为xyz（设置）、-xyz（清楚）、xy-z（设置xy，清楚z），标志如下：</p>
+<pre><code>    I              大小写敏感（默认关闭）
+    m              ^和$在匹配文本开始和结尾之外，还可以匹配行首和行尾（默认开启）
+    s              让.可以匹配\n（默认关闭）
+    U              非贪婪的：交换x*和x*?、x+和x+?……的含义（默认关闭）
+</code></pre>
+<p>边界匹配：</p>
+<pre><code>    ^              匹配文本开始，标志m为真时，还匹配行首
+    $              匹配文本结尾，标志m为真时，还匹配行尾
+    \A             匹配文本开始
+    \b             单词边界（一边字符属于\w，另一边为文首、文尾、行首、行尾或属于\W）
+    \B             非单词边界
+    \z             匹配文本结尾
+</code></pre>
+<p>转义序列：</p>
+<pre><code>    \a             响铃符（\007）
+    \f             换纸符（\014）
+    \t             水平制表符（\011）
+    \n             换行符（\012）
+    \r             回车符（\015）
+    \v             垂直制表符（\013）
+    \123           八进制表示的字符码（最多三个数字）
+    \x7F           十六进制表示的字符码（必须两个数字）
+    \x{10FFFF}     十六进制表示的字符码
+    \*             字面值'*'
+    \Q...\E        反斜线后面的字符的字面值
+</code></pre>
+<p>字符族（预定义字符族之外，方括号内部）的语法：</p>
+<pre><code>     x              单个字符
+    A-Z            字符范围（方括号内部才可以用）
+    \d             Perl字符族
+    [:foo:]        ASCII字符族
+    \pF            单字符名的Unicode字符族
+    \p{Foo}        完整字符名的Unicode字符族
+</code></pre>
+<p>预定义字符族作为字符族的元素：</p>
+<pre><code>    [\d]           == \d
+    [^\d]          == \D
+    [\D]           == \D
+    [^\D]          == \d
+    [[:name:]]     == [:name:]
+    [^[:name:]]    == [:^name:]
+    [\p{Name}]     == \p{Name}
+    [^\p{Name}]    == \P{Name}
+</code></pre>
+<p>Perl字符族：</p>
+<pre><code>    \d             == [0-9]
+    \D             == [^0-9]
+    \s             == [\t\n\f\r ]
+    \S             == [^\t\n\f\r ]
+    \w             == [0-9A-Za-z_]
+    \W             == [^0-9A-Za-z_]
+</code></pre>
+<p>ASCII字符族：</p>
+<pre><code>    [:alnum:]      == [0-9A-Za-z]
+    [:alpha:]      == [A-Za-z]
+    [:ascii:]      == [\x00-\x7F]
+    [:blank:]      == [\t ]
+    [:cntrl:]      == [\x00-\x1F\x7F]
+    [:digit:]      == [0-9]
+    [:graph:]      == [!-~] == [A-Za-z0-9!&quot;#$%&amp;'()*+,\-./:;&lt;=&gt;?@[\\\]^_`{|}~]
+    [:lower:]      == [a-z]
+    [:print:]      == [ -~] == [ [:graph:]]
+    [:punct:]      == [!-/:-@[-`{-~]
+    [:space:]      == [\t\n\v\f\r ]
+    [:upper:]      == [A-Z]
+    [:word:]       == [0-9A-Za-z_]
+    [:xdigit:]     == [0-9A-Fa-f]
+</code></pre>
+<p>本包的正则表达式保证搜索复杂度为O(n)，其中n为输入的长度。这一点很多其他开源实现是无法保证的</p>
+<p>方法集也有一个用于从RuneReader中读取文本进行匹配的子集：</p>
+<pre><code>MatchReader, FindReaderIndex, FindReaderSubmatchIndex
+</code></pre>
+<p>该子集可能会增加。注意正则表达式匹配可能需要检验匹配结果前后的文本，因此从RuneReader匹配文本的方法很可能会读取到远远超出返回的结果所在的位置。</p>
+<h2 id="方法说明">方法说明</h2>
+<h3 id="func-quotemeta">func QuoteMeta</h3>
+<pre><code>func QuoteMeta(s string) string
+</code></pre>
+<p>QuoteMeta函数会将参数s字符串中包含的正则表达式元字符都进行转义并返回转义后的字符串s。该字符串可以用在正则表达式中匹配字面值s。例如，QuoteMeta(<code>[foo]</code>)会返回<code>\[foo\]</code>。<br>
+例子：</p>
+<pre><code>str := regexp.QuoteMeta(`[foo]`)   
+fmt.Println(str) //对[]进行转义
+</code></pre>
+<p>输出:</p>
+<pre><code>\[foo\] 
+</code></pre>
+<h3 id="func-match">func Match</h3>
+<pre><code>func Match(pattern string, b []byte) (matched bool, err error)
+</code></pre>
+<p>Match检查b中是否存在匹配pattern的子序列。更复杂的用法请使用Compile函数和Regexp对象。<br>
+例子：</p>
+<pre><code>isMatch, err := regexp.Match(&quot;张三&quot;, []byte(&quot;这个张三就是逊了&quot;))
+if err == nil &amp;&amp; isMatch {
+	fmt.Println(&quot;匹配成功&quot;)
+} 
+</code></pre>
+<p>输出:</p>
+<pre><code>匹配成功
+</code></pre>
+<h3 id="func-matchstring">func MatchString</h3>
+<pre><code>func MatchString(pattern string, s string) (matched bool, err error)
+</code></pre>
+<p>MatchString类似Match，但匹配对象是字符串。<br>
+例子：</p>
+<pre><code>isMatch, err := regexp.MatchString(&quot;张三&quot;, &quot;这个张三就是逊了&quot;)
+if err == nil &amp;&amp; isMatch {
+	fmt.Println(&quot;匹配成功&quot;)
+}
+</code></pre>
+<p>输出：</p>
+<pre><code>匹配成功
+</code></pre>
+<h3 id="func-matchreader">func MatchReader</h3>
+<pre><code>func MatchReader(pattern string, r io.RuneReader) (matched bool, err error)
+</code></pre>
+<p>MatchReader类似Match，但匹配对象是io.RuneReader。<br>
+例子：</p>
+<pre><code>//buffer := bytes.NewBuffer([]byte(&quot;张三就是逊了&quot;))
+//isMatch, err := regexp.MatchReader(&quot;张三&quot;, buffer)
+reader := strings.NewReader(&quot;张三就是逊了&quot;)
+isMatch, err := regexp.MatchReader(&quot;张三&quot;, reader)
+if err == nil &amp;&amp; isMatch {
+	fmt.Println(&quot;匹配成功&quot;)
+}
+</code></pre>
+<p>输出：</p>
+<pre><code>匹配成功
+</code></pre>
+<h3 id="结构体-regexp">结构体 Regexp</h3>
+<pre><code>type Regexp struct {
+	// 内含隐藏或非导出字段
+}
+</code></pre>
+<p>Regexp代表一个编译好的正则表达式。Regexp可以被多线程安全地同时使用。</p>
+<h4 id="func-compile">func Compile</h4>
+<pre><code>func Compile(expr string) (*Regexp, error)
+</code></pre>
+<p>Compile解析并返回一个正则表达式。如果成功返回，该Regexp就可用于匹配文本。</p>
+<p>在匹配文本时，该正则表达式会尽可能早的开始匹配，并且在匹配过程中选择回溯搜索到的第一个匹配结果。这种模式被称为“leftmost-first”，Perl、Python和其他实现都采用了这种模式，但本包的实现没有回溯的损耗。对POSIX的“leftmost-longest”模式，参见CompilePOSIX。<br>
+例子：</p>
+<pre><code>expr := `(\d+)@qq.com`
+regexp, err := regexp.Compile(expr)
+if err != nil {
+	fmt.Println(err)
+	return
+}
+results := regexp.FindAllStringSubmatch(&quot;我的qq邮箱是1144206790@qq.com&quot;, -1)
+for _, result := range results {
+	fmt.Println(&quot;邮箱 &quot;, result[0])
+	fmt.Println(&quot;QQ &quot;, result[1])
+}
+</code></pre>
+<p>输出：</p>
+<pre><code>邮箱  1144206790@qq.com
+QQ  1144206790
+</code></pre>
+<h4 id="func-compileposix">func CompilePOSIX</h4>
+<pre><code>func CompilePOSIX(expr string) (*Regexp, error)
+</code></pre>
+<p>类似Compile但会将语法约束到POSIX ERE（egrep）语法，并将匹配模式设置为leftmost-longest。</p>
+<p>在匹配文本时，该正则表达式会尽可能早的开始匹配，并且在匹配过程中选择搜索到的最长的匹配结果。这种模式被称为“leftmost-longest”，POSIX采用了这种模式（早期正则的DFA自动机模式）。</p>
+<p>然而，可能会有多个“leftmost-longest”匹配，每个都有不同的组匹配状态，本包在这里和POSIX不同。在所有可能的“leftmost-longest”匹配里，本包选择回溯搜索时第一个找到的，而POSIX会选择候选结果中第一个组匹配最长的（可能有多个），然后再从中选出第二个组匹配最长的，依次类推。POSIX规则计算困难，甚至没有良好定义。<br>
+参见<a href="http://swtch.com/~rsc/regexp/regexp2.html#posix" title="http://swtch.com/~rsc/regexp/regexp2.html#posix">http://swtch.com/~rsc/regexp/regexp2.html#posix</a>获取细节。</p>
+<h4 id="func-mustcompile">func MustCompile</h4>
+<pre><code>func MustCompile(str string) *Regexp
+</code></pre>
+<p>MustCompile类似Compile但会在解析失败时panic，主要用于全局正则表达式变量的安全初始化。</p>
+<p>例子：</p>
+<pre><code>expr := `(\d+)@qq.com`
+regexp := regexp.MustCompile(expr)
+results := regexp.FindAllStringSubmatch(&quot;我的qq邮箱是1144206790@qq.com&quot;, -1)
+for _, result := range results {
+	fmt.Println(&quot;邮箱 &quot;, result[0])
+	fmt.Println(&quot;QQ &quot;, result[1])
+}
+</code></pre>
+<h4 id="func-mustcompileposix">func MustCompilePOSIX</h4>
+<pre><code>func MustCompilePOSIX(str string) *Regexp
+</code></pre>
+<p>MustCompilePOSIX类似CompilePOSIX但会在解析失败时panic，主要用于全局正则表达式变量的安全初始化。</p>
+<h4 id="func-regexp-string">func (*Regexp) String</h4>
+<pre><code>func (re *Regexp) String() string
+</code></pre>
+<p>String返回用于编译成正则表达式的字符串。<br>
+例子：</p>
+<pre><code>expr := `(\d+)@qq.com`
+regexp := regexp.MustCompile(expr)
+fmt.Println(regexp.String())
+</code></pre>
+<p>输出：</p>
+<pre><code>(\d+)@qq.com
+</code></pre>
+<h4 id="func-regexp-literalprefix">func (*Regexp) LiteralPrefix</h4>
+<pre><code>// prefix：共同拥有的前缀
+// complete：如果 prefix 就是正则表达式本身，则返回 true，否则返回 false
+func (re *Regexp) LiteralPrefix() (prefix string, complete bool)
+</code></pre>
+<p>返回所有匹配项都共同拥有的前缀（去除可变元素）。如果该字符串字面值包含整个正则表达式，返回值complete会设为真。<br>
+例子：</p>
+<pre><code>//expr := `(\d+)@qq.com`
+//expr := `1144206790`
+expr := `1144206790\d+`
+regexp := regexp.MustCompile(expr)
+prefix, complete := regexp.LiteralPrefix()
+fmt.Println(prefix, complete)
+</code></pre>
+<p>输出：</p>
+<pre><code>// false
+//1144206790 true
+1144206790 false
+</code></pre>
+<h4 id="func-regexp-numsubexp">func (*Regexp) NumSubexp</h4>
+<pre><code>func (re *Regexp) NumSubexp() int
+</code></pre>
+<p>NumSubexp返回该正则表达式中捕获分组的数量。<br>
+例子：</p>
+<pre><code>//expr := `(11)44206790@qq.com`
+expr := `(11)(442)06790@qq.com`
+regexp := regexp.MustCompile(expr)
+fmt.Println(regexp.NumSubexp())
+</code></pre>
+<p>输出：</p>
+<pre><code>//1
+2
+</code></pre>
+<h4 id="func-regexp-subexpnames">func (*Regexp) SubexpNames</h4>
+<pre><code>func (re *Regexp) SubexpNames() []string
+</code></pre>
+<p>SubexpNames返回该正则表达式中捕获分组的名字。第一个分组的名字是names<a href="https://studygolang.com/pkgdoc?_blank">1</a>，因此，如果m是一个组匹配切片，m[i]的名字是SubexpNames()[i]。因为整个正则表达式是无法被命名的，names[0]必然是空字符串。该切片不应被修改。<br>
+例子：</p>
+<pre><code>re := regexp.MustCompile(&quot;(?P&lt;first&gt;[a-zA-Z]+) (?P&lt;last&gt;[a-zA-Z]+)&quot;)
+fmt.Println(re.MatchString(&quot;Alan Turing&quot;))
+fmt.Printf(&quot;%q\n&quot;, re.SubexpNames())
+reversed := fmt.Sprintf(&quot;${%s} ${%s}&quot;, re.SubexpNames()[2], re.SubexpNames()[1])
+fmt.Println(reversed)
+fmt.Println(re.ReplaceAllString(&quot;Alan Turing&quot;, reversed))
+</code></pre>
+<p>输出：</p>
+<pre><code>true
+[&quot;&quot; &quot;first&quot; &quot;last&quot;]
+${last} ${first}
+Turing Alan
+</code></pre>
+<h4 id="func-regexp-longest">func (*Regexp) Longest</h4>
+<pre><code>func (re *Regexp) Longest()
+</code></pre>
+<p>Longest让正则表达式在之后的搜索中都采用&quot;leftmost-longest&quot;模式。在匹配文本时，该正则表达式会尽可能早的开始匹配，并且在匹配过程中选择搜索到的最长的匹配结果。</p>
+<h4 id="func-regexp-match">func (*Regexp) Match</h4>
+<pre><code>func (re *Regexp) Match(b []byte) bool
+</code></pre>
+<p>Match检查b中是否存在匹配pattern的子序列。<br>
+例子：</p>
+<pre><code>expr := `张三`
+regexp := regexp.MustCompile(expr)
+mathed := regexp.Match([]byte(&quot;张三就是逊了&quot;))
+fmt.Println(mathed)
+</code></pre>
+<p>输出：</p>
+<pre><code>true
+</code></pre>
+<h4 id="func-regexp-matchstring">func (*Regexp) MatchString</h4>
+<pre><code>func (re *Regexp) MatchString(s string) bool
+</code></pre>
+<p>MatchString类似Match，但匹配对象是字符串。<br>
+例子：</p>
+<pre><code>expr := `张三`
+regexp := regexp.MustCompile(expr)
+mathed := regexp.MatchString(&quot;张三就是逊了&quot;)
+fmt.Println(mathed)
+</code></pre>
+<p>输出：</p>
+<pre><code>true
+</code></pre>
+<h4 id="func-regexp-matchreader">func (*Regexp) MatchReader</h4>
+<pre><code>func (re *Regexp) MatchReader(r io.RuneReader) bool
+</code></pre>
+<p>MatchReader类似Match，但匹配对象是io.RuneReader。<br>
+例子：</p>
+<pre><code>expr := `张三`
+regexp := regexp.MustCompile(expr)
+mathed := regexp.MatchReader(strings.NewReader(&quot;张三就是逊了&quot;))
+fmt.Println(mathed)
+</code></pre>
+<p>输出：</p>
+<pre><code>true
+</code></pre>
+<h4 id="func-regexp-find">func (*Regexp) Find</h4>
+<pre><code>func (re *Regexp) Find(b []byte) []byte
+</code></pre>
+<p>Find返回保管正则表达式re在b中的最左侧的一个匹配结果的[]byte切片。如果没有匹配到，会返回nil。<br>
+例子：</p>
+<pre><code>expr := `张三|李四`
+regexp := regexp.MustCompile(expr)
+b := regexp.Find([]byte(&quot;12张三65张三李四&quot;))
+fmt.Println(string(b))
+</code></pre>
+<p>输出：</p>
+<pre><code>张三
+</code></pre>
+<h4 id="func-regexp-findstring">func (*Regexp) FindString</h4>
+<pre><code>func (re *Regexp) FindString(s string) string
+</code></pre>
+<p>Find返回保管正则表达式re在b中的最左侧的一个匹配结果的字符串。如果没有匹配到，会返回&quot;&quot;；但如果正则表达式成功匹配了一个空字符串，也会返回&quot;&quot;。如果需要区分这种情况，请使用FindStringIndex 或FindStringSubmatch。
+例子：</p>
+<pre><code>expr := `张三`
+regexp := regexp.MustCompile(expr)
+str := regexp.FindString(&quot;12张三65张三李四&quot;)
+fmt.Println(str)
+str = regexp.FindString(&quot;李四&quot;)
+fmt.Println(str)
+</code></pre>
+<p>输出：</p>
+<pre><code>张三
+</code></pre>
+<h4 id="func-regexp-findindex">func (*Regexp) FindIndex</h4>
+<pre><code>func (re *Regexp) FindIndex(b []byte) (loc []int)
+</code></pre>
+<p>Find返回保管正则表达式re在b中的最左侧的一个匹配结果的起止位置的切片（显然len(loc)==2）。匹配结果可以通过起止位置对b做切片操作得到：b[loc[0]:loc<a href="https://studygolang.com/pkgdoc?_blank">1</a>]。如果没有匹配到，会返回nil。
+例子：</p>
+<pre><code>expr := `张三`
+regexp := regexp.MustCompile(expr)
+arr := regexp.FindIndex([]byte(&quot;12张三65张三李四&quot;))
+fmt.Printf(&quot;起始位置的切片:%v, len(arr):%v\n&quot;, arr, len(arr))
+fmt.Println(string([]int32(&quot;12张三65张三李四&quot;)[arr[0]:arr[1]]))
+arr = regexp.FindIndex([]byte(&quot;666&quot;))
+fmt.Printf(&quot;起始位置的切片:%v, len(arr):%v\n&quot;, arr, len(arr))
+</code></pre>
+<p>输出：</p>
+<pre><code>起始位置的切片:[2 8], len(arr):2
+张三65张三
+起始位置的切片:[], len(arr):0
+</code></pre>
+<h4 id="func-regexp-findstringindex">func (*Regexp) FindStringIndex</h4>
+<pre><code>func (re *Regexp) FindStringIndex(s string) (loc []int)
+</code></pre>
+<p>Find返回保管正则表达式re在b中的最左侧的一个匹配结果的起止位置的切片（显然len(loc)==2）。匹配结果可以通过起止位置对b做切片操作得到：b[loc[0]:loc<a href="https://studygolang.com/pkgdoc?_blank">1</a>]。如果没有匹配到，会返回nil。
+例子：</p>
+<pre><code>expr := `张三`
+regexp := regexp.MustCompile(expr)
+arr := regexp.FindStringIndex(&quot;12张三65张三李四&quot;)
+fmt.Printf(&quot;起始位置的切片:%v, len(arr):%v\n&quot;, arr, len(arr))
+fmt.Println(string([]int32(&quot;12张三65张三李四&quot;)[arr[0]:arr[1]]))
+arr = regexp.FindStringIndex(&quot;666&quot;)
+fmt.Printf(&quot;起始位置的切片:%v, len(arr):%v\n&quot;, arr, len(arr))
+</code></pre>
+<p>输出：</p>
+<pre><code>起始位置的切片:[2 8], len(arr):2
+张三65张三
+起始位置的切片:[], len(arr):0
+</code></pre>
+<h4 id="func-regexp-findreaderindex">func (*Regexp) FindReaderIndex</h4>
+<pre><code>func (re *Regexp) FindReaderIndex(r io.RuneReader) (loc []int)
+</code></pre>
+<p>Find返回保管正则表达式re在b中的最左侧的一个匹配结果的起止位置的切片（显然len(loc)==2）。匹配结果可以在输入流r的字节偏移量loc[0]到loc<a href="https://studygolang.com/pkgdoc?_blank">1</a>-1（包括二者）位置找到。如果没有匹配到，会返回nil。<br>
+例子：</p>
+<pre><code>epr := `(\d+)`
+re := regexp.MustCompile(epr)
+loc := re.FindReaderIndex(strings.NewReader(&quot;1991年02月12日&quot;))
+fmt.Printf(&quot;起始位置的切片:%v, len(arr):%v\n&quot;, loc, len(loc))
+</code></pre>
+<p>输出：</p>
+<pre><code>起始位置的切片:[0 4], len(arr):2
+</code></pre>
+<h4 id="func-regexp-findsubmatch">func (*Regexp) FindSubmatch</h4>
+<pre><code>func (re *Regexp) FindSubmatch(b []byte) [][]byte
+</code></pre>
+<p>Find返回一个保管正则表达式re在b中的最左侧的一个匹配结果以及（可能有的）分组匹配的结果的[]string切片。如果没有匹配到，会返回nil。<br>
+例子：</p>
+<pre><code>epr := `(\d+)`
+re := regexp.MustCompile(epr)
+b := re.FindSubmatch([]byte(&quot;1991年02月12日&quot;))
+for _, c := range b {
+	fmt.Println(string(c))
+}
+fmt.Println(b)
+</code></pre>
+<p>输出：</p>
+<pre><code>1991
+1991
+[[49 57 57 49] [49 57 57 49]]
+</code></pre>
+<h4 id="func-regexp-findstringsubmatch">func (*Regexp) FindStringSubmatch</h4>
+<pre><code>func (re *Regexp) FindStringSubmatch(s string) []string
+</code></pre>
+<p>Find返回一个保管正则表达式re在b中的最左侧的一个匹配结果以及（可能有的）分组匹配的结果的[]string切片。如果没有匹配到，会返回nil。<br>
+例子：</p>
+<pre><code>re := regexp.MustCompile(&quot;a(x*)b(y|z)c&quot;)
+fmt.Printf(&quot;%q\n&quot;, re.FindStringSubmatch(&quot;-axxxbyc-&quot;))
+fmt.Printf(&quot;%q\n&quot;, re.FindStringSubmatch(&quot;-abzc-&quot;))
+</code></pre>
+<p>输出：</p>
+<pre><code>[&quot;axxxbyc&quot; &quot;xxx&quot; &quot;y&quot;]
+[&quot;abzc&quot; &quot;&quot; &quot;z&quot;]
+</code></pre>
+<h4 id="func-regexp-findsubmatchindex">func (*Regexp) FindSubmatchIndex</h4>
+<pre><code>func (re *Regexp) FindSubmatchIndex(b []byte) []int
+</code></pre>
+<p>Find返回一个保管正则表达式re在b中的最左侧的一个匹配结果以及（可能有的）分组匹配的结果的起止位置的切片。匹配结果和分组匹配结果可以通过起止位置对b做切片操作得到：b[loc[2<em>n]:loc[2</em>n+1]]。如果没有匹配到，会返回nil。<br>
+例子：</p>
+<pre><code>expr := `(\d+)`
+regexp := regexp.MustCompile(expr)
+arr := regexp.FindSubmatchIndex([]byte(&quot;12张三65张三李四&quot;))
+fmt.Printf(&quot;起始位置的切片:%v, len(arr):%v\n&quot;, arr, len(arr))
+fmt.Println(string([]int32(&quot;12张三65张三李四&quot;)[arr[0]:arr[1]]))
+arr = regexp.FindStringIndex(&quot;666&quot;)
+fmt.Printf(&quot;起始位置的切片:%v, len(arr):%v\n&quot;, arr, len(arr))
+</code></pre>
+<p>输出：</p>
+<pre><code>起始位置的切片:[0 2 0 2], len(arr):4
+12
+起始位置的切片:[0 3], len(arr):2
+</code></pre>
+<h4 id="func-regexp-findstringsubmatchindex">func (*Regexp) FindStringSubmatchIndex</h4>
+<pre><code>func (re *Regexp) FindStringSubmatchIndex(s string) []int
+</code></pre>
+<p>Find返回一个保管正则表达式re在b中的最左侧的一个匹配结果以及（可能有的）分组匹配的结果的起止位置的切片。匹配结果和分组匹配结果可以通过起止位置对b做切片操作得到：b[loc[2<em>n]:loc[2</em>n+1]]。如果没有匹配到，会返回nil。<br>
+例子：</p>
+<pre><code>expr := `(\d+)`
+regexp := regexp.MustCompile(expr)
+arr := regexp.FindStringSubmatchIndex(&quot;12张三65张三李四&quot;)
+fmt.Printf(&quot;起始位置的切片:%v, len(arr):%v\n&quot;, arr, len(arr))
+fmt.Println(string([]int32(&quot;12张三65张三李四&quot;)[arr[0]:arr[1]]))
+arr = regexp.FindStringIndex(&quot;666&quot;)
+fmt.Printf(&quot;起始位置的切片:%v, len(arr):%v\n&quot;, arr, len(arr))
+</code></pre>
+<p>输出：</p>
+<pre><code>起始位置的切片:[0 2 0 2], len(arr):4
+12
+起始位置的切片:[0 3], len(arr):2
+</code></pre>
+<h4 id="func-regexp-findreadersubmatchindex">func (*Regexp) FindReaderSubmatchIndex</h4>
+<pre><code>func (re *Regexp) FindReaderSubmatchIndex(r io.RuneReader) []int
+</code></pre>
+<p>Find返回一个保管正则表达式re在b中的最左侧的一个匹配结果以及（可能有的）分组匹配的结果的起止位置的切片。匹配结果和分组匹配结果可以在输入流r的字节偏移量loc[0]到loc<a href="https://studygolang.com/pkgdoc?_blank">1</a>-1（包括二者）位置找到。如果没有匹配到，会返回nil。 <br>
+例子：</p>
+<pre><code>expr := `(\d+)`
+regexp := regexp.MustCompile(expr)
+arr := regexp.FindReaderSubmatchIndex(strings.NewReader(&quot;12张三65张三李四&quot;))
+fmt.Printf(&quot;起始位置的切片:%v, len(arr):%v\n&quot;, arr, len(arr))
+fmt.Println(string([]int32(&quot;12张三65张三李四&quot;)[arr[0]:arr[1]]))
+arr = regexp.FindStringIndex(&quot;666&quot;)
+fmt.Printf(&quot;起始位置的切片:%v, len(arr):%v\n&quot;, arr, len(arr))
+</code></pre>
+<p>输出：</p>
+<pre><code>起始位置的切片:[0 2 0 2], len(arr):4
+12
+起始位置的切片:[0 3], len(arr):2
+</code></pre>
+<h4 id="func-regexp-findall">func (*Regexp) FindAll</h4>
+<pre><code>func (re *Regexp) FindAll(b []byte, n int) [][]byte
+</code></pre>
+<p>Find返回保管正则表达式re在b中的所有不重叠的匹配结果的[][]byte切片。如果没有匹配到，会返回nil。 参数n=-1,表示匹配整个字符串；n&gt;0，表示最多匹配n个。<br>
+例子：</p>
+<pre><code>expr := `(\d+)`
+regexp := regexp.MustCompile(expr)
+b := regexp.FindAll([]byte(&quot;12张三65张三李四&quot;), -1)
+for _, c := range b {
+	fmt.Println(string(c))
+}
+</code></pre>
+<p>输出：</p>
+<pre><code>12
+65
+</code></pre>
+<p>例子2：</p>
+<pre><code>expr := `(\d+)`
+regexp := regexp.MustCompile(expr)
+b := regexp.FindAll([]byte(&quot;12张三65张三李四&quot;), 1)
+for _, c := range b {
+	fmt.Println(string(c))
+}
+</code></pre>
+<p>输出：</p>
+<pre><code>12
+</code></pre>
+<h4 id="func-regexp-findallstring">func (*Regexp) FindAllString</h4>
+<pre><code>func (re *Regexp) FindAllString(s string, n int) []string
+</code></pre>
+<p>Find返回保管正则表达式re在b中的所有不重叠的匹配结果的[]string切片。如果没有匹配到，会返回nil。参数n=-1,表示匹配整个字符串；n&gt;0，表示最多匹配n个。<br>
+例子：</p>
+<pre><code>expr := `(\d+)`
+regexp := regexp.MustCompile(expr)
+b := regexp.FindAllString(&quot;12张三65张三李四&quot;, -1)
+for _, c := range b {
+	fmt.Println(string(c))
+}
+</code></pre>
+<p>输出：</p>
+<pre><code>12
+65
+</code></pre>
+<h4 id="func-regexp-findallindex">func (*Regexp) FindAllIndex</h4>
+<pre><code>func (re *Regexp) FindAllIndex(b []byte, n int) [][]int
+</code></pre>
+<p>Find返回保管正则表达式re在b中的所有不重叠的匹配结果的起止位置的切片。如果没有匹配到，会返回nil。</p>
+<h4 id="func-regexp-findallstringindex">func (*Regexp) FindAllStringIndex</h4>
+<pre><code>func (re *Regexp) FindAllStringIndex(s string, n int) [][]int
+</code></pre>
+<p>Find返回保管正则表达式re在b中的所有不重叠的匹配结果的起止位置的切片。如果没有匹配到，会返回nil。</p>
+<h4 id="func-regexp-findallsubmatch">func (*Regexp) FindAllSubmatch</h4>
+<pre><code>func (re *Regexp) FindAllSubmatch(b []byte, n int) [][][]byte
+</code></pre>
+<p>Find返回一个保管正则表达式re在b中的所有不重叠的匹配结果及其对应的（可能有的）分组匹配的结果的[][][]byte切片。如果没有匹配到，会返回nil。</p>
+<p>例子:</p>
+<pre><code>expr := `(\d+)`
+regexp := regexp.MustCompile(expr)
+b := regexp.FindAllSubmatch([]byte(&quot;12张三65张三李四&quot;), -1)
+for _, c := range b {
+	for _, d := range c {
+        fmt.Println(string(d))
+	}
+}
+</code></pre>
+<p>输出：</p>
+<pre><code>12
+12
+65
+65
+</code></pre>
+<h4 id="func-regexp-findallstringsubmatch">func (*Regexp) FindAllStringSubmatch</h4>
+<pre><code>func (re *Regexp) FindAllStringSubmatch(s string, n int) [][]string
+</code></pre>
+<p>Find返回一个保管正则表达式re在b中的所有不重叠的匹配结果及其对应的（可能有的）分组匹配的结果的[][]string切片。如果没有匹配到，会返回nil。</p>
+<h4 id="func-regexp-findallsubmatchindex">func (*Regexp) FindAllSubmatchIndex</h4>
+<pre><code>func (re *Regexp) FindAllSubmatchIndex(b []byte, n int) [][]int
+</code></pre>
+<p>Find返回一个保管正则表达式re在b中的所有不重叠的匹配结果及其对应的（可能有的）分组匹配的结果的起止位置的切片（第一层表示第几个匹配结果，完整匹配和分组匹配的起止位置对在第二层）。如果没有匹配到，会返回nil。</p>
+<h4 id="func-regexp-findallstringsubmatchindex">func (*Regexp) FindAllStringSubmatchIndex</h4>
+<pre><code>func (re *Regexp) FindAllStringSubmatchIndex(s string, n int) [][]int
+</code></pre>
+<p>Find返回一个保管正则表达式re在b中的所有不重叠的匹配结果及其对应的（可能有的）分组匹配的结果的起止位置的切片（第一层表示第几个匹配结果，完整匹配和分组匹配的起止位置对在第二层）。如果没有匹配到，会返回nil。</p>
+<p>例子：</p>
+<pre><code>re := regexp.MustCompile(&quot;a(x*)b&quot;)
+// Indices:
+//    01234567   012345678
+//    -ab-axb-   -axxb-ab-
+fmt.Println(re.FindAllStringSubmatchIndex(&quot;-ab-&quot;, -1))
+fmt.Println(re.FindAllStringSubmatchIndex(&quot;-axxb-&quot;, -1))
+fmt.Println(re.FindAllStringSubmatchIndex(&quot;-ab-axb-&quot;, -1))
+fmt.Println(re.FindAllStringSubmatchIndex(&quot;-axxb-ab-&quot;, -1))
+fmt.Println(re.FindAllStringSubmatchIndex(&quot;-foo-&quot;, -1))
+</code></pre>
+<p>输出：</p>
+<pre><code>[[1 3 2 2]]
+[[1 5 2 4]]
+[[1 3 2 2] [4 7 5 6]]
+[[1 5 2 4] [6 8 7 7]]
+[]
+</code></pre>
+<h4 id="func-regexp-split">func (*Regexp) Split</h4>
+<pre><code>func (re *Regexp) Split(s string, n int) []string
+</code></pre>
+<p>Split将re在s中匹配到的结果作为分隔符将s分割成多个字符串，并返回这些正则匹配结果之间的字符串的切片。
+返回的切片不会包含正则匹配的结果，只包含匹配结果之间的片段。当正则表达式re中不含正则元字符时，本方法等价于strings.SplitN。 <br>
+例子：</p>
+<pre><code>s := regexp.MustCompile(&quot;a*&quot;).Split(&quot;abaabaccadaaae&quot;, 5)
+</code></pre>
+<p>输出：</p>
+<pre><code>s: [&quot;&quot;, &quot;b&quot;, &quot;b&quot;, &quot;c&quot;, &quot;cadaaae&quot;]
+</code></pre>
+<p>参数n绝对返回的子字符串的数量：</p>
+<pre><code>n &gt; 0 : 返回最多n个子字符串，最后一个子字符串是剩余未进行分割的部分。
+n == 0: 返回nil (zero substrings)
+n &lt; 0 : 返回所有子字符串
+</code></pre>
+<h4 id="func-regexp-expand">func (*Regexp) Expand</h4>
+<pre><code>func (re *Regexp) Expand(dst []byte, template []byte, src []byte, match []int) []byte
+</code></pre>
+<p>Expand返回新生成的将template添加到dst后面的切片。在添加时，Expand会将template中的变量替换为从src匹配的结果。match应该是被FindSubmatchIndex返回的匹配结果起止位置索引。（通常就是匹配src，除非你要将匹配得到的位置用于另一个[]byte）</p>
+<p>在template参数里，一个变量表示为格式如：$name或${name}的字符串，其中name是长度&gt;0的字母、数字和下划线的序列。一个单纯的数字字符名如$1会作为捕获分组的数字索引；其他的名字对应(?P<!-- raw HTML omitted -->&hellip;)语法产生的命名捕获分组的名字。超出范围的数字索引、索引对应的分组未匹配到文本、正则表达式中未出现的分组名，都会被替换为空切片。</p>
+<p>$name格式的变量名，name会尽可能取最长序列：$1x等价于${1x}而非${1}x，$10等价于${10}而非${1}0。因此$name适用在后跟空格/换行等字符的情况，${name}适用所有情况。</p>
+<p>如果要在输出中插入一个字面值'$'，在template里可以使用$$。</p>
+<h4 id="func-regexp-expandstring">func (*Regexp) ExpandString</h4>
+<pre><code>func (re *Regexp) ExpandString(dst []byte, template string, src string, match []int) []byte
+</code></pre>
+<p>ExpandString类似Expand，但template和src参数为字符串。它将替换结果添加到切片并返回切片，以便让调用代码控制内存申请。</p>
+<h4 id="func-regexp-replaceallliteral">func (*Regexp) ReplaceAllLiteral</h4>
+<pre><code>func (re *Regexp) ReplaceAllLiteral(src, repl []byte) []byte
+</code></pre>
+<p>ReplaceAllLiteral返回src的一个拷贝，将src中所有re的匹配结果都替换为repl。repl参数被直接使用，不会使用Expand进行扩展。</p>
+<h4 id="func-regexp-replaceallliteralstring">func (*Regexp) ReplaceAllLiteralString</h4>
+<pre><code>func (re *Regexp) ReplaceAllLiteralString(src, repl string) string
+</code></pre>
+<p>ReplaceAllLiteralString返回src的一个拷贝，将src中所有re的匹配结果都替换为repl。repl参数被直接使用，不会使用Expand进行扩展。</p>
+<p>例子：</p>
+<pre><code>re := regexp.MustCompile(&quot;a(x*)b&quot;)
+fmt.Println(re.ReplaceAllLiteralString(&quot;-ab-axxb-&quot;, &quot;T&quot;))
+fmt.Println(re.ReplaceAllLiteralString(&quot;-ab-axxb-&quot;, &quot;$1&quot;))
+fmt.Println(re.ReplaceAllLiteralString(&quot;-ab-axxb-&quot;, &quot;${1}&quot;))
+</code></pre>
+<p>输出：</p>
+<pre><code>-T-T-
+-$1-$1-
+-${1}-${1}-
+</code></pre>
+<h4 id="func-regexp-replaceall">func (*Regexp) ReplaceAll</h4>
+<pre><code>func (re *Regexp) ReplaceAll(src, repl []byte) []byte
+</code></pre>
+<p>ReplaceAllLiteral返回src的一个拷贝，将src中所有re的匹配结果都替换为repl。在替换时，repl中的'$&lsquo;符号会按照Expand方法的规则进行解释和替换，例如$1会被替换为第一个分组匹配结果。</p>
+<h4 id="func-regexp-replaceallstring">func (*Regexp) ReplaceAllString</h4>
+<pre><code>func (re *Regexp) ReplaceAllString(src, repl string) string
+</code></pre>
+<p>ReplaceAllLiteral返回src的一个拷贝，将src中所有re的匹配结果都替换为repl。在替换时，repl中的&rsquo;$&lsquo;符号会按照Expand方法的规则进行解释和替换，例如$1会被替换为第一个分组匹配结果。</p>
+<p>例子：</p>
+<pre><code>re := regexp.MustCompile(&quot;a(x*)b&quot;)
+fmt.Println(re.ReplaceAllString(&quot;-ab-axxb-&quot;, &quot;T&quot;))
+fmt.Println(re.ReplaceAllString(&quot;-ab-axxb-&quot;, &quot;$1&quot;))
+fmt.Println(re.ReplaceAllString(&quot;-ab-axxb-&quot;, &quot;$1W&quot;))
+fmt.Println(re.ReplaceAllString(&quot;-ab-axxb-&quot;, &quot;${1}W&quot;))
+</code></pre>
+<p>输出：</p>
+<pre><code>-T-T-
+--xx-
+---
+-W-xxW-
+</code></pre>
+<h4 id="func-regexp-replaceallfunc">func (*Regexp) ReplaceAllFunc</h4>
+<pre><code>func (re *Regexp) ReplaceAllFunc(src []byte, repl func([]byte) []byte) []byte
+</code></pre>
+<p>ReplaceAllLiteral返回src的一个拷贝，将src中所有re的匹配结果（设为matched）都替换为repl(matched)。repl返回的切片被直接使用，不会使用Expand进行扩展。</p>
+<h4 id="func-regexp-replaceallstringfunc">func (*Regexp) ReplaceAllStringFunc</h4>
+<pre><code>func (re *Regexp) ReplaceAllStringFunc(src string, repl func(string) string) string
+</code></pre>
+<p>ReplaceAllLiteral返回src的一个拷贝，将src中所有re的匹配结果（设为matched）都替换为repl(matched)。repl返回的字符串被直接使用，不会使用Expand进行扩展。</p>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+ 
+ 
+ 
+ window.onload = function () {
+   const header = document.getElementById('post-header');
+   const headerHeight = header.offsetHeight;
+   
+   document.documentElement.style.scrollPaddingTop = headerHeight + 10 + "px";
+ }
+
+ const tocToggleButton = document.getElementById("toc-toggle");
+
+ const tippyInstance = tippy('#toc-toggle', {
+  trigger: 'click',
+  content: '<div id="table-of-contents">\u003cnav id=\u0022TableOfContents\u0022\u003e\n  \u003cul\u003e\n    \u003cli\u003e\u003ca href=\u0022#syntax语法\u0022\u003eSyntax语法\u003c\/a\u003e\u003c\/li\u003e\n    \u003cli\u003e\u003ca href=\u0022#方法说明\u0022\u003e方法说明\u003c\/a\u003e\n      \u003cul\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-quotemeta\u0022\u003efunc QuoteMeta\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-match\u0022\u003efunc Match\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-matchstring\u0022\u003efunc MatchString\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#func-matchreader\u0022\u003efunc MatchReader\u003c\/a\u003e\u003c\/li\u003e\n        \u003cli\u003e\u003ca href=\u0022#结构体-regexp\u0022\u003e结构体 Regexp\u003c\/a\u003e\n          \u003cul\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-compile\u0022\u003efunc Compile\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-compileposix\u0022\u003efunc CompilePOSIX\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-mustcompile\u0022\u003efunc MustCompile\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-mustcompileposix\u0022\u003efunc MustCompilePOSIX\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-string\u0022\u003efunc (*Regexp) String\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-literalprefix\u0022\u003efunc (*Regexp) LiteralPrefix\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-numsubexp\u0022\u003efunc (*Regexp) NumSubexp\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-subexpnames\u0022\u003efunc (*Regexp) SubexpNames\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-longest\u0022\u003efunc (*Regexp) Longest\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-match\u0022\u003efunc (*Regexp) Match\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-matchstring\u0022\u003efunc (*Regexp) MatchString\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-matchreader\u0022\u003efunc (*Regexp) MatchReader\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-find\u0022\u003efunc (*Regexp) Find\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findstring\u0022\u003efunc (*Regexp) FindString\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findindex\u0022\u003efunc (*Regexp) FindIndex\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findstringindex\u0022\u003efunc (*Regexp) FindStringIndex\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findreaderindex\u0022\u003efunc (*Regexp) FindReaderIndex\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findsubmatch\u0022\u003efunc (*Regexp) FindSubmatch\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findstringsubmatch\u0022\u003efunc (*Regexp) FindStringSubmatch\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findsubmatchindex\u0022\u003efunc (*Regexp) FindSubmatchIndex\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findstringsubmatchindex\u0022\u003efunc (*Regexp) FindStringSubmatchIndex\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findreadersubmatchindex\u0022\u003efunc (*Regexp) FindReaderSubmatchIndex\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findall\u0022\u003efunc (*Regexp) FindAll\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findallstring\u0022\u003efunc (*Regexp) FindAllString\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findallindex\u0022\u003efunc (*Regexp) FindAllIndex\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findallstringindex\u0022\u003efunc (*Regexp) FindAllStringIndex\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findallsubmatch\u0022\u003efunc (*Regexp) FindAllSubmatch\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findallstringsubmatch\u0022\u003efunc (*Regexp) FindAllStringSubmatch\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findallsubmatchindex\u0022\u003efunc (*Regexp) FindAllSubmatchIndex\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-findallstringsubmatchindex\u0022\u003efunc (*Regexp) FindAllStringSubmatchIndex\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-split\u0022\u003efunc (*Regexp) Split\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-expand\u0022\u003efunc (*Regexp) Expand\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-expandstring\u0022\u003efunc (*Regexp) ExpandString\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-replaceallliteral\u0022\u003efunc (*Regexp) ReplaceAllLiteral\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-replaceallliteralstring\u0022\u003efunc (*Regexp) ReplaceAllLiteralString\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-replaceall\u0022\u003efunc (*Regexp) ReplaceAll\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-replaceallstring\u0022\u003efunc (*Regexp) ReplaceAllString\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-replaceallfunc\u0022\u003efunc (*Regexp) ReplaceAllFunc\u003c\/a\u003e\u003c\/li\u003e\n            \u003cli\u003e\u003ca href=\u0022#func-regexp-replaceallstringfunc\u0022\u003efunc (*Regexp) ReplaceAllStringFunc\u003c\/a\u003e\u003c\/li\u003e\n          \u003c\/ul\u003e\n        \u003c\/li\u003e\n      \u003c\/ul\u003e\n    \u003c\/li\u003e\n  \u003c\/ul\u003e\n\u003c\/nav\u003e</div>',
+  allowHTML: true,
+  placement: 'bottom-start',
+  interactive: true,
+  arrow: false,
+  maxWidth: "none",
+  onHide: function () { tocToggleButton.classList.remove("hover"); },
+  onShow: function () { tocToggleButton.classList.add("hover"); },
+  onShown: function () {
+    selectTableOfContentsOption();
+
+    if (window.hasSetupTableOfContentsListeners) {
+      return;
+    }
+
+    const tableOfContents = document.getElementById("table-of-contents");
+    tableOfContents.addEventListener('click', function () {
+      
+      tippyInstance[0].hide();
+    });
+
+    window.hasSetupTableOfContentsListeners = true;
+  }
+ });
+
+ function selectTableOfContentsOption () {
+   const optionSelectedClass = 'table-of-contents-option-selected';
+
+   const tableOfContentsOptions = document.querySelectorAll("#table-of-contents > nav > ul li");
+
+   for (const option of tableOfContentsOptions) {
+     
+
+     const [child] = option.children;
+     if (child.tagName.toLowerCase() !== 'a') {
+       continue;
+     }
+
+     if (window.location.href === child.href) {
+       child.classList.add(optionSelectedClass);
+     } else {
+       child.classList.remove(optionSelectedClass);
+     }
+   }
+ }
+
+ window.onhashchange = selectTableOfContentsOption;
+</script>
+
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://topcoder520.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+</body>
+
+<script type="application/javascript" src="https://topcoder520.github.io/js/github-style.js"></script>
+
+
+
+</html>
